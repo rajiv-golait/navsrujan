@@ -26,10 +26,10 @@ export function ConversationList({
   onDelete,
 }: ConversationListProps) {
   return (
-    <div className="flex h-full flex-col border-r border-[var(--stitch-outline-variant)] bg-[var(--stitch-surface-container-low)]">
-      <div className="border-b border-[var(--stitch-outline-variant)] p-4">
+    <div className="flex h-full flex-col rounded-2xl border border-[var(--stitch-outline-variant)]/70 bg-[var(--surface-1)]">
+      <div className="border-b border-[var(--stitch-outline-variant)]/70 p-4">
         <Button
-          className="w-full bg-[var(--stitch-primary)] hover:bg-[var(--stitch-primary)]/90 text-white rounded-xl"
+          className="w-full bg-[var(--vault-accent)] hover:bg-[var(--vault-accent)]/90 text-white rounded-2xl"
           onClick={onNew}
         >
           <MessageSquarePlus className="mr-2 h-4 w-4" />
@@ -51,10 +51,10 @@ export function ConversationList({
               <div
                 key={conv.id}
                 className={cn(
-                  "group flex items-start gap-2 rounded-xl p-3 transition-all duration-200",
+                  "group flex items-start gap-2 rounded-2xl p-3 transition-all duration-200",
                   activeId === conv.id
-                    ? "bg-[var(--stitch-primary-container)] text-[var(--stitch-on-primary-container)]"
-                    : "hover:bg-[var(--stitch-surface-container-high)]"
+                    ? "bg-[var(--vault-accent)]/18 border border-[var(--vault-accent)]/35"
+                    : "hover:bg-[var(--surface-2)]"
                 )}
               >
                 <button

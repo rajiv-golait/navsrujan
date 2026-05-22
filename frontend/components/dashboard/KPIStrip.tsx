@@ -1,6 +1,7 @@
 "use client";
 
 import { memo } from "react";
+import { ArrowDown, CalendarDays, Wallet } from "lucide-react";
 import { formatCurrency } from "@/lib/utils";
 import type { MonthSummary } from "@/types/transaction";
 
@@ -12,28 +13,29 @@ interface KPIStripProps {
 const kpiCards = [
   {
     label: "TOTAL SPENT",
+    icon: ArrowDown,
     getValue: (s: MonthSummary) => formatCurrency(s.total_spent ?? 0),
     getTrend: (s: MonthSummary) => ({
       text: `${s.transaction_count} transactions`,
-      color: "text-[var(--stitch-error)]",
-      icon: "↑ 12%",
+      color: "text-[var(--stitch-on-surface-variant)]",
     }),
-    barColor: "bg-[var(--stitch-primary)]",
-    barWidth: "w-3/4",
+    barColor: "from-rose-400 to-rose-500",
+    barWidth: "w-[68%]",
   },
   {
     label: "THIS MONTH",
+    icon: CalendarDays,
     getValue: (s: MonthSummary) => formatCurrency(s.total_spent ?? 0),
     getTrend: () => ({
-      text: "Safe",
-      color: "text-[var(--stitch-tertiary)]",
-      icon: "",
+      text: "Running total",
+      color: "text-[var(--stitch-on-surface-variant)]",
     }),
-    barColor: "bg-[var(--stitch-secondary-container)]",
+    barColor: "from-indigo-400 to-violet-500",
     barWidth: "w-1/2",
   },
   {
     label: "BUDGET LEFT",
+    icon: Wallet,
     getValue: (s: MonthSummary) => {
       const budget = 20000;
       const left = budget - (s.total_spent ?? 0);
@@ -42,9 +44,8 @@ const kpiCards = [
     getTrend: () => ({
       text: "14 Days left",
       color: "text-[var(--stitch-on-surface-variant)]",
-      icon: "",
     }),
-    barColor: "bg-[var(--stitch-tertiary-container)]",
+    barColor: "from-emerald-400 to-cyan-500",
     barWidth: "w-[40%]",
   },
 ];
@@ -52,11 +53,11 @@ const kpiCards = [
 export const KPIStrip = memo(function KPIStrip({ summary, isLoading }: KPIStripProps) {
   if (isLoading) {
     return (
-      <section className="flex overflow-x-auto hide-scrollbar snap-x snap-mandatory gap-4 md:grid md:grid-cols-3 mb-6">
+      <section className="flex overflow-x-auto hide-scrollbar snap-x snap-mandatory gap-3 md:grid md:grid-cols-3 mb-5 md:mb-6">
         {[1, 2, 3].map((i) => (
           <div
             key={i}
-            className="min-w-[280px] md:min-w-0 snap-center stitch-card p-4 animate-pulse"
+            className="min-w-[240px] md:min-w-0 snap-center vault-card p-4 md:p-5 animate-pulse"
           >
             <div className="h-3 w-20 bg-[var(--stitch-surface-container-high)] rounded mb-3" />
             <div className="h-7 w-28 bg-[var(--stitch-surface-container-high)] rounded mb-4" />
@@ -77,31 +78,31 @@ export const KPIStrip = memo(function KPIStrip({ summary, isLoading }: KPIStripP
   const data = summary ?? defaultSummary;
 
   return (
-    <section className="flex overflow-x-auto hide-scrollbar snap-x snap-mandatory gap-4 md:grid md:grid-cols-3 mb-6">
+    <section className="flex overflow-x-auto hide-scrollbar snap-x snap-mandatory gap-3 md:grid md:grid-cols-3 mb-5 md:mb-6">
       {kpiCards.map((kpi, i) => {
         const trend = kpi.getTrend(data);
         return (
           <div
             key={i}
-            className="min-w-[280px] md:min-w-0 snap-center stitch-card p-4 hover:shadow-md transition-shadow duration-200 cursor-pointer active:scale-[0.97]"
+            className="min-w-[240px] md:min-w-0 snap-center vault-card p-4 md:p-5 transition-shadow duration-200"
             style={{ animationDelay: `${i * 80}ms` }}
           >
-            <p className="text-label-caps text-[var(--stitch-on-surface-variant)] mb-1">
-              {kpi.label}
-            </p>
-            <div className="flex items-baseline gap-2">
-              <span className="text-stat-lg text-[var(--stitch-on-surface)]">
+            <div className="flex items-center justify-between mb-2">
+              <p className="text-label-caps text-[var(--stitch-on-surface-variant)]">
+                {kpi.label}
+              </p>
+              <span className="h-8 w-8 rounded-xl bg-[var(--surface-2)] text-[var(--vault-accent)] flex items-center justify-center">
+                <kpi.icon className="h-4 w-4" />
+              </span>
+            </div>
+            <div className="flex items-end gap-2">
+              <span className="text-2xl md:text-3xl font-bold tracking-tight text-[var(--stitch-on-surface)]">
                 {kpi.getValue(data)}
               </span>
-              {trend.icon && (
-                <span className={`text-stat-sm ${trend.color}`}>{trend.icon}</span>
-              )}
-              {!trend.icon && trend.text && (
-                <span className={`text-stat-sm ${trend.color}`}>{trend.text}</span>
-              )}
             </div>
-            <div className="mt-4 h-1 w-full bg-[var(--stitch-surface-container-high)] rounded-full overflow-hidden">
-              <div className={`h-full ${kpi.barColor} ${kpi.barWidth} rounded-full transition-all duration-700`} />
+            <p className={`text-xs mt-1 ${trend.color}`}>{trend.text}</p>
+            <div className="mt-4 h-1.5 w-full bg-[var(--surface-0)] rounded-full overflow-hidden">
+              <div className={`h-full bg-gradient-to-r ${kpi.barColor} ${kpi.barWidth} rounded-full transition-all duration-700`} />
             </div>
           </div>
         );

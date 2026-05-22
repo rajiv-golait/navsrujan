@@ -5,10 +5,14 @@ from app.api.v1 import (
     academic_expenses,
     analytics,
     auth,
+    balance,
     chat,
     education,
+    memory,
     ml,
     planning,
+    recurring_obligations,
+    scheduled_expenses,
     transactions,
 )
 from app.core.config import settings
@@ -45,6 +49,18 @@ app.include_router(
     tags=["Academic Expenses"],
 )
 app.include_router(chat.router, prefix="/api/v1/chat", tags=["Chat"])
+app.include_router(balance.router, prefix="/api/v1/balance", tags=["Balance"])
+app.include_router(
+    scheduled_expenses.router,
+    prefix="/api/v1/scheduled-expenses",
+    tags=["Scheduled Expenses"],
+)
+app.include_router(
+    recurring_obligations.router,
+    prefix="/api/v1/recurring-obligations",
+    tags=["Recurring Obligations"],
+)
+app.include_router(memory.router, prefix="/api/v1/memory", tags=["Memory"])
 app.include_router(
     analytics.router,
     prefix="/api/v1/analytics",

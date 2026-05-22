@@ -11,6 +11,10 @@ interface ChatBubbleProps {
 
 export function ChatBubble({ message }: ChatBubbleProps) {
   const isUser = message.role === "user";
+  const timeLabel = new Date(message.created_at).toLocaleTimeString([], {
+    hour: "2-digit",
+    minute: "2-digit",
+  });
 
   return (
     <div
@@ -19,24 +23,24 @@ export function ChatBubble({ message }: ChatBubbleProps) {
         isUser ? "justify-end" : "justify-start"
       )}
     >
-      <div className="flex flex-col max-w-[85%]">
+      <div className="flex flex-col max-w-[86%] md:max-w-[80%]">
         {/* Sender label */}
         {!isUser && (
           <div className="flex items-center gap-1.5 mb-1.5 px-1">
-            <svg className="h-4 w-4 text-[var(--stitch-primary)]" viewBox="0 0 24 24" fill="currentColor">
+            <svg className="h-4 w-4 text-[var(--vault-accent)]" viewBox="0 0 24 24" fill="currentColor">
               <path d="M19.07 4.93l-1.41 1.41A8.014 8.014 0 0120 12c0 4.42-3.58 8-8 8s-8-3.58-8-8c0-3.35 2.07-6.22 5-7.41V2.05C4.06 3.29 1 7.26 1 12c0 6.08 4.93 11 11 11s11-4.92 11-11c0-2.69-.97-5.15-2.58-7.07zM12 2v8l5 3-1 1.73L10 11V2h2z"/>
             </svg>
-            <span className="text-label-caps text-[var(--stitch-primary)]">STRIVE AI</span>
+            <span className="text-label-caps text-[var(--vault-accent)]">Vault AI</span>
           </div>
         )}
 
         {/* Bubble */}
         <div
           className={cn(
-            "px-4 py-3 text-sm leading-relaxed",
+            "px-4 py-3.5 text-sm leading-relaxed shadow-sm",
             isUser
-              ? "bg-[var(--stitch-primary)] text-white rounded-2xl rounded-br-md shadow-md"
-              : "bg-[var(--stitch-primary)]/5 text-[var(--stitch-on-surface)] rounded-2xl rounded-bl-md border border-[var(--stitch-primary)]/10"
+              ? "bg-gradient-to-br from-[var(--vault-accent)] to-[#5b57f4] text-white rounded-2xl rounded-br-md shadow-lg shadow-[var(--vault-accent)]/25"
+              : "bg-[var(--surface-1)] text-[var(--stitch-on-surface)] rounded-2xl rounded-bl-md border border-[var(--stitch-outline-variant)]/70"
           )}
         >
           {!isUser && message.intent && (
@@ -51,11 +55,12 @@ export function ChatBubble({ message }: ChatBubbleProps) {
         </div>
 
         {/* Timestamp */}
-        {isUser && (
-          <p className="text-[10px] text-[var(--stitch-on-surface-variant)] mt-1 text-right px-1">
-            {new Date(message.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-          </p>
-        )}
+        <p className={cn(
+          "text-[10px] text-[var(--stitch-on-surface-variant)] mt-1 px-1",
+          isUser ? "text-right" : "text-left"
+        )}>
+          {timeLabel}
+        </p>
       </div>
     </div>
   );

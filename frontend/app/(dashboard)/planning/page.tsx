@@ -42,11 +42,13 @@ export default function PlanningPage() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold text-[var(--stitch-on-surface)]">Long-Term Planning</h1>
+      <header>
+        <p className="text-label-caps text-[var(--stitch-on-surface-variant)]">Planning</p>
+        <h1 className="text-headline-mobile text-[var(--stitch-on-surface)]">Long-term planning</h1>
+      </header>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* Degree Projection */}
-        <div className="bg-[var(--stitch-surface-container-low)] p-6 rounded-2xl">
+        <div className="vault-card p-6">
           <h2 className="text-lg font-bold mb-4">Degree Cost Projection</h2>
           {!projData ? (
             <div className="text-center py-6">
@@ -76,7 +78,7 @@ export default function PlanningPage() {
         </div>
 
         {/* Funding Gap */}
-        <div className="bg-[var(--stitch-surface-container-low)] p-6 rounded-2xl">
+        <div className="vault-card p-6">
           <h2 className="text-lg font-bold mb-4">Funding Gap Analysis</h2>
           {!projData ? (
             <p className="text-[var(--stitch-on-surface-variant)] text-center py-6">Generate a degree projection first.</p>
@@ -114,7 +116,7 @@ export default function PlanningPage() {
         </div>
 
         {/* Semester Forecast */}
-        <div className="bg-[var(--stitch-surface-container-low)] p-6 rounded-2xl">
+        <div className="vault-card p-6">
           <h2 className="text-lg font-bold mb-4">Semester {currentSemester} Academic Forecast</h2>
           {forecastLoading ? <p>Loading...</p> : (
             <div className="space-y-4">
@@ -135,7 +137,7 @@ export default function PlanningPage() {
         </div>
 
         {/* Peer Comparison */}
-        <div className="bg-[var(--stitch-surface-container-low)] p-6 rounded-2xl">
+        <div className="vault-card p-6">
           <h2 className="text-lg font-bold mb-4">Peer Comparison</h2>
           {peerLoading ? <p>Loading...</p> : (
             <div className="space-y-6">

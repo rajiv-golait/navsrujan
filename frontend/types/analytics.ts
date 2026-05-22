@@ -9,6 +9,7 @@ export interface MLInsight {
   budget_utilization_pct?: number;
   anomaly_count: number;
   models_loaded: boolean;
+  recent_anomalies?: any[];
 }
 
 export interface ForecastDay {
@@ -52,6 +53,13 @@ export interface AnalyticsSnapshot {
   forecast?: ExpenseForecast;
   recommendations?: SavingRecommendation[];
   overspending_patterns?: OverspendingPattern[];
+  // Enhanced predictive analytics
+  survival_forecast?: any;
+  budget_health?: any;
+  savings_opportunities?: any[];
+  spending_forecast?: any;
+  peer_comparison?: any;
+  smart_alerts?: any[];
 }
 
 export interface AnalyticsInsights {

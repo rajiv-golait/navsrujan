@@ -114,18 +114,52 @@ def generate_intelligence(
         pass
 
     recent_anomalies = feature_df[feature_df["is_anomaly"]].tail(5)
-    anomaly_list = [
-        {
-            "amount": float(row["amount"]),
-            "category": row.get("category"),
-            "merchant": row.get("merchant"),
+    
+    # Calculate category averages for context
+    category_avgs = feature_df.groupby("category")["amount"].mean().to_dict()
+    
+    anomaly_list = []
+    for _, row in recent_anomalies.iterrows():
+        amount = float(row["amount"])
+        category = row.get("category", "Other")
+        merchant = row.get("merchant", "Unknown")
+        
+        # Determine why it's anomalous
+        cat_avg = category_avgs.get(category, amount)
+        multiplier = amount / cat_avg if cat_avg > 0 else 1
+        
+        # Generate context reason
+        if multiplier >= 3:
+            reason = f"{int(multiplier)}x your usual {category} spending"
+        elif multiplier >= 2:
+            reason = f"2x your typical {category} amount"
+        else:
+            reason = f"Unusual {category} transaction"
+        
+        # Generate actionable suggestion
+        if category == "Food":
+            suggestion = "Exam stress? Try meal prep on Sunday to save ₹800/week"
+        elif category == "Shopping":
+            suggestion = "Apply 24-hour rule before next purchase to avoid impulse buying"
+        elif category == "Entertainment":
+            suggestion = "Consider shared subscriptions or group movie plans"
+        elif category == "Transport":
+            suggestion = "Long distance trip? Book earlier next time for better rates"
+        else:
+            suggestion = f"Review if this {category} expense was necessary"
+        
+        anomaly_list.append({
+            "amount": amount,
+            "category": category,
+            "merchant": merchant,
             "transaction_date": str(row["transaction_date"].date())
             if hasattr(row["transaction_date"], "date")
             else str(row["transaction_date"]),
-            "severity": "high",
-        }
-        for _, row in recent_anomalies.iterrows()
-    ]
+            "severity": "high" if multiplier >= 3 else "medium",
+            "reason": reason,
+            "suggestion": suggestion,
+            "multiplier": round(multiplier, 1),
+        })
 
     overspending = "High" if bool(latest.get("is_anomaly")) else "Low"
     if float(latest.get("budget_utilization", 0)) > 1.0:

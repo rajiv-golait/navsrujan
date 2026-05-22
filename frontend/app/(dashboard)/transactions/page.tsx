@@ -195,83 +195,52 @@ export default function TransactionsPage() {
 
   return (
     <div className="space-y-6">
-      {/* Natural Language Input */}
+      <header>
+        <p className="text-label-caps text-[var(--stitch-on-surface-variant)]">Transactions</p>
+        <h1 className="text-headline-mobile text-[var(--stitch-on-surface)]">Spend ledger</h1>
+      </header>
       <NaturalLanguageInput onParsed={handleParsed} />
 
-      {/* Desktop Grid Layout */}
-      <div className="md:grid md:grid-cols-12 md:gap-4">
-        {/* Desktop Sidebar Filters */}
-        <div className="hidden md:block md:col-span-3 space-y-6">
-          {/* Category Filters */}
-          <div className="stitch-card p-4">
-            <h3 className="text-label-caps text-[var(--stitch-on-surface-variant)] mb-4 px-2">
-              FILTERS
-            </h3>
-            <div className="space-y-1">
-              {FILTER_CATEGORIES.map((cat) => (
-                <button
-                  key={cat}
-                  onClick={() => setActiveCategory(cat)}
-                  className={`w-full text-left px-4 py-2 rounded-xl text-sm transition-colors ${
-                    activeCategory === cat
-                      ? "bg-[var(--stitch-primary)]/10 text-[var(--stitch-primary)] font-bold"
-                      : "hover:bg-[var(--stitch-surface-container-low)] text-[var(--stitch-on-surface-variant)]"
-                  }`}
-                >
-                  {cat}
-                </button>
-              ))}
-            </div>
+      <div className="space-y-4">
+        <div className="vault-card p-3">
+          <div className="flex gap-2 overflow-x-auto hide-scrollbar pb-1">
+            {TIME_PERIODS.map((period) => (
+              <button
+                key={period}
+                onClick={() => setActiveTimePeriod(period)}
+                className={`whitespace-nowrap px-4 py-2 rounded-full text-sm transition-colors ${
+                  activeTimePeriod === period
+                    ? "bg-[var(--vault-accent)]/90 text-white"
+                    : "bg-[var(--surface-1)] text-[var(--stitch-on-surface-variant)]"
+                }`}
+              >
+                {period}
+              </button>
+            ))}
           </div>
-
-          {/* Time Period Filters */}
-          <div className="stitch-card p-4">
-            <h3 className="text-label-caps text-[var(--stitch-on-surface-variant)] mb-4 px-2">
-              TIME PERIOD
-            </h3>
-            <div className="space-y-1">
-              {TIME_PERIODS.map((period) => (
-                <button
-                  key={period}
-                  onClick={() => setActiveTimePeriod(period)}
-                  className={`w-full text-left px-4 py-2 rounded-xl text-sm transition-colors ${
-                    activeTimePeriod === period
-                      ? "bg-[var(--stitch-primary)]/10 text-[var(--stitch-primary)] font-bold"
-                      : "hover:bg-[var(--stitch-surface-container-low)] text-[var(--stitch-on-surface-variant)]"
-                  }`}
-                >
-                  {period}
-                </button>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        {/* Transaction List */}
-        <div className="md:col-span-9">
-          {/* Mobile Filter Chips */}
-          <div className="md:hidden flex gap-2 overflow-x-auto pb-4 hide-scrollbar">
+          <div className="mt-2 flex gap-2 overflow-x-auto hide-scrollbar pb-1">
             {FILTER_CATEGORIES.map((cat) => (
               <button
                 key={cat}
                 onClick={() => setActiveCategory(cat)}
-                className={`whitespace-nowrap px-4 py-2 rounded-full text-label-caps text-xs transition-colors ${
+                className={`whitespace-nowrap px-4 py-2 rounded-full text-sm transition-colors ${
                   activeCategory === cat
                     ? "bg-[var(--stitch-primary)] text-white"
-                    : "bg-[var(--stitch-surface-container-high)] text-[var(--stitch-on-surface-variant)]"
+                    : "bg-[var(--surface-1)] text-[var(--stitch-on-surface-variant)]"
                 }`}
               >
                 {cat}
               </button>
             ))}
           </div>
+        </div>
 
           {/* Header */}
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between mb-4">
             <h2 className="text-headline-mobile md:text-headline-lg font-bold text-[var(--stitch-on-surface)]">
               Recent History
             </h2>
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2 flex-wrap">
               <Dialog
                 open={importDialogOpen}
                 onOpenChange={(open) => {
@@ -286,7 +255,7 @@ export default function TransactionsPage() {
               >
                 <DialogTrigger
                   render={
-                    <Button variant="outline" className="rounded-xl" />
+                    <Button variant="outline" className="rounded-xl h-9 px-3 text-xs sm:text-sm sm:h-10 sm:px-4" />
                   }
                 >
                   <Upload className="mr-2 h-4 w-4" />
@@ -397,14 +366,14 @@ export default function TransactionsPage() {
                   </div>
                 </DialogContent>
               </Dialog>
-              <button className="text-label-caps text-xs text-[var(--stitch-primary)] hover:underline flex items-center gap-1">
+              <button className="text-label-caps text-[11px] text-[var(--stitch-primary)] hover:underline flex items-center gap-1 px-2 py-1 rounded-lg hover:bg-[var(--surface-1)]">
                 <Download className="h-3 w-3" />
                 Download CSV
               </button>
               <Dialog open={dialogOpen} onOpenChange={handleDialogClose}>
                 <DialogTrigger
                   render={
-                    <Button className="bg-[var(--stitch-primary)] hover:bg-[var(--stitch-primary)]/90 text-white rounded-xl" />
+                    <Button className="bg-[var(--stitch-primary)] hover:bg-[var(--stitch-primary)]/90 text-white rounded-xl h-9 px-3 text-xs sm:text-sm sm:h-10 sm:px-4" />
                   }
                 >
                   <Plus className="mr-2 h-4 w-4" />
@@ -427,7 +396,7 @@ export default function TransactionsPage() {
           </div>
 
           {/* Transaction Rows */}
-          <div className="stitch-card p-4">
+          <div className="vault-card p-4">
             <TransactionList
               transactions={filteredTransactions}
               isLoading={isLoading}
@@ -453,7 +422,7 @@ export default function TransactionsPage() {
             </div>
             <Link
               href="/insights"
-              className="stitch-card p-6 flex flex-col justify-center items-center text-center col-span-2 md:col-span-1 border-2 border-dashed border-[var(--stitch-outline-variant)] hover:bg-[var(--stitch-surface-container-low)] transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--stitch-primary)]"
+              className="vault-card p-6 flex flex-col justify-center items-center text-center col-span-2 md:col-span-1 border-2 border-dashed border-[var(--stitch-outline-variant)] hover:bg-[var(--stitch-surface-container-low)] transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--stitch-primary)]"
               aria-label="View spending insights"
             >
               <svg className="h-10 w-10 text-[var(--stitch-primary)] mb-2" viewBox="0 0 24 24" fill="currentColor">
@@ -463,7 +432,6 @@ export default function TransactionsPage() {
               <p className="text-xs text-[var(--stitch-on-surface-variant)]">AI-powered budget analysis</p>
             </Link>
           </div>
-        </div>
       </div>
     </div>
   );

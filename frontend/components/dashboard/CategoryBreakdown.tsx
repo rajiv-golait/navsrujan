@@ -11,15 +11,15 @@ interface CategoryBreakdownProps {
 }
 
 const CATEGORY_CONFIG: Record<string, { icon: string; color: string; bg: string }> = {
-  Food: { icon: "🍽️", color: "bg-[var(--stitch-secondary-container)]", bg: "bg-[var(--stitch-secondary-container)]/20" },
-  Transport: { icon: "🚌", color: "bg-[var(--stitch-primary)]", bg: "bg-[var(--stitch-primary)]/10" },
-  Entertainment: { icon: "🎬", color: "bg-[var(--stitch-tertiary)]", bg: "bg-[var(--stitch-tertiary)]/10" },
-  Shopping: { icon: "🛍️", color: "bg-[var(--stitch-secondary-container)]", bg: "bg-[var(--stitch-secondary-container)]/10" },
-  Bills: { icon: "📱", color: "bg-[var(--stitch-primary)]", bg: "bg-[var(--stitch-primary)]/10" },
-  Education: { icon: "📚", color: "bg-[var(--stitch-primary-container)]", bg: "bg-[var(--stitch-primary-container)]/10" },
-  Health: { icon: "❤️", color: "bg-[var(--stitch-error)]", bg: "bg-[var(--stitch-error)]/10" },
-  Academic: { icon: "🎓", color: "bg-[var(--stitch-primary-container)]", bg: "bg-[var(--stitch-primary-container)]/10" },
-  Other: { icon: "📦", color: "bg-[var(--stitch-outline)]", bg: "bg-[var(--stitch-outline)]/10" },
+  Food: { icon: "🍔", color: "category-color-food", bg: "category-bg-food" },
+  Transport: { icon: "🚆", color: "category-color-transport", bg: "category-bg-transport" },
+  Entertainment: { icon: "🎬", color: "category-color-entertainment", bg: "category-bg-entertainment" },
+  Shopping: { icon: "🛍️", color: "category-color-shopping", bg: "category-bg-shopping" },
+  Bills: { icon: "🔁", color: "category-color-bills", bg: "category-bg-bills" },
+  Education: { icon: "📚", color: "category-color-education", bg: "category-bg-education" },
+  Health: { icon: "💗", color: "category-color-health", bg: "category-bg-health" },
+  Academic: { icon: "🎓", color: "category-color-education", bg: "category-bg-education" },
+  Other: { icon: "📦", color: "category-color-other", bg: "category-bg-other" },
 };
 
 export const CategoryBreakdown = memo(function CategoryBreakdown({
@@ -79,36 +79,29 @@ export const CategoryBreakdown = memo(function CategoryBreakdown({
   }
 
   return (
-    <div className="stitch-card p-6">
+    <div className="vault-card p-6">
       <h3 className="text-label-caps text-[var(--stitch-on-surface-variant)] mb-4">
         Category Breakdown
       </h3>
-      {/* Icon + Progress Bar Layout (Stitch style) */}
-      <div className="flex flex-col gap-5">
+      <div className="flex flex-col gap-3">
         {chartData.map((item) => {
           const config = CATEGORY_CONFIG[item.category] ?? CATEGORY_CONFIG.Other;
           const pct = totalSpent > 0 ? Math.round((item.total / totalSpent) * 100) : 0;
           return (
-            <div key={item.category} className="flex items-center gap-4 animate-float-in">
-              <div
-                className={`w-10 h-10 rounded-full ${config.bg} flex items-center justify-center text-xl flex-shrink-0`}
-              >
-                {config.icon}
-              </div>
-              <div className="flex-1 min-w-0">
-                <div className="flex justify-between mb-1">
-                  <span className="text-sm font-semibold text-[var(--stitch-on-surface)] truncate">
-                    {item.category}
-                  </span>
-                  <span className="text-stat-sm text-[var(--stitch-on-surface)]">{pct}%</span>
+            <div key={item.category} className="ios-row flex items-center justify-between animate-float-in">
+              <div className="flex items-center gap-3 min-w-0">
+                <div className={`w-9 h-9 rounded-xl ${config.bg} flex items-center justify-center text-lg flex-shrink-0`}>
+                  {config.icon}
                 </div>
-                <div className="h-2 w-full bg-[var(--stitch-surface-container-high)] rounded-full overflow-hidden">
-                  <div
-                    className={`h-full ${config.color} rounded-full transition-all duration-700 ease-out`}
-                    style={{ width: `${pct}%` }}
-                  />
+                <div className="min-w-0">
+                  <p className="text-sm font-semibold text-[var(--stitch-on-surface)] truncate">{item.category}</p>
+                  <p className="text-xs text-[var(--stitch-on-surface-variant)]">₹{item.total.toLocaleString("en-IN")}</p>
                 </div>
               </div>
+              <span className={`category-chip ${config.color}`}>
+                <span className={`category-dot ${config.bg.replace("category-bg", "category-solid")}`} />
+                {pct}%
+              </span>
             </div>
           );
         })}

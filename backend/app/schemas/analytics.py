@@ -20,3 +20,9 @@ class AnalyticsInsightsResponse(BaseModel):
     snapshot: dict[str, Any]
     ml: Optional[MLInsightResponse] = None
     ml_models_available: bool = False
+    spending_forecast: Optional[dict[str, Any]] = None
+    savings_opportunities: Optional[list[dict[str, Any]]] = None
+    budget_health: Optional[dict[str, Any]] = None
+    survival_forecast: Optional[dict[str, Any]] = None
+    peer_comparison: Optional[dict[str, Any]] = None
+    smart_alerts: Optional[list[dict[str, Any]]] = None

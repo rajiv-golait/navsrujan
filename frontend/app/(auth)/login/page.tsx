@@ -33,7 +33,7 @@ export default function LoginPage() {
       }
 
       toast.success("Welcome back!");
-      router.push("/dashboard");
+      router.push("/chat");
     } catch (error) {
       toast.error(
         error instanceof Error ? error.message : "Invalid credentials",

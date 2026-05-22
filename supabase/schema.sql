@@ -105,6 +105,131 @@ CREATE POLICY "Users can delete own transactions"
     ON transactions FOR DELETE
     USING (auth.uid() = user_id);
 
+-- Balance anchor on profile
+ALTER TABLE user_profiles ADD COLUMN IF NOT EXISTS starting_balance DECIMAL(12, 2);
+ALTER TABLE user_profiles ADD COLUMN IF NOT EXISTS balance_as_of_date DATE;
+
+-- Chat
+CREATE TABLE IF NOT EXISTS chat_conversations (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+    title TEXT,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS chat_messages (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    conversation_id UUID NOT NULL REFERENCES chat_conversations(id) ON DELETE CASCADE,
+    user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+    role VARCHAR(20) NOT NULL CHECK (role IN ('user', 'assistant', 'system')),
+    content TEXT NOT NULL,
+    intent VARCHAR(50),
+    analytics_snapshot JSONB,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS idx_chat_conversations_user ON chat_conversations(user_id, updated_at DESC);
+CREATE INDEX IF NOT EXISTS idx_chat_messages_conversation ON chat_messages(conversation_id, created_at);
+
+ALTER TABLE chat_conversations ENABLE ROW LEVEL SECURITY;
+ALTER TABLE chat_messages ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "Users can view own conversations" ON chat_conversations;
+CREATE POLICY "Users can view own conversations" ON chat_conversations FOR SELECT USING (auth.uid() = user_id);
+DROP POLICY IF EXISTS "Users can insert own conversations" ON chat_conversations;
+CREATE POLICY "Users can insert own conversations" ON chat_conversations FOR INSERT WITH CHECK (auth.uid() = user_id);
+DROP POLICY IF EXISTS "Users can update own conversations" ON chat_conversations;
+CREATE POLICY "Users can update own conversations" ON chat_conversations FOR UPDATE USING (auth.uid() = user_id);
+DROP POLICY IF EXISTS "Users can delete own conversations" ON chat_conversations;
+CREATE POLICY "Users can delete own conversations" ON chat_conversations FOR DELETE USING (auth.uid() = user_id);
+
+DROP POLICY IF EXISTS "Users can view own chat messages" ON chat_messages;
+CREATE POLICY "Users can view own chat messages" ON chat_messages FOR SELECT USING (auth.uid() = user_id);
+DROP POLICY IF EXISTS "Users can insert own chat messages" ON chat_messages;
+CREATE POLICY "Users can insert own chat messages" ON chat_messages FOR INSERT WITH CHECK (auth.uid() = user_id);
+
+-- Scheduled future expenses (e.g. laptop in 5 days)
+CREATE TABLE IF NOT EXISTS scheduled_expenses (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+    title TEXT NOT NULL,
+    amount DECIMAL(12, 2) NOT NULL CHECK (amount > 0),
+    expected_date DATE NOT NULL,
+    category VARCHAR(50) DEFAULT 'Other',
+    status VARCHAR(20) NOT NULL DEFAULT 'planned' CHECK (status IN ('planned', 'done', 'cancelled')),
+    confidence DECIMAL(3, 2),
+    source VARCHAR(20) NOT NULL DEFAULT 'chat' CHECK (source IN ('chat', 'manual')),
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS idx_scheduled_expenses_user_date
+    ON scheduled_expenses(user_id, expected_date);
+
+ALTER TABLE scheduled_expenses ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "Users can view own scheduled expenses" ON scheduled_expenses;
+CREATE POLICY "Users can view own scheduled expenses" ON scheduled_expenses FOR SELECT USING (auth.uid() = user_id);
+DROP POLICY IF EXISTS "Users can insert own scheduled expenses" ON scheduled_expenses;
+CREATE POLICY "Users can insert own scheduled expenses" ON scheduled_expenses FOR INSERT WITH CHECK (auth.uid() = user_id);
+DROP POLICY IF EXISTS "Users can update own scheduled expenses" ON scheduled_expenses;
+CREATE POLICY "Users can update own scheduled expenses" ON scheduled_expenses FOR UPDATE USING (auth.uid() = user_id);
+DROP POLICY IF EXISTS "Users can delete own scheduled expenses" ON scheduled_expenses;
+CREATE POLICY "Users can delete own scheduled expenses" ON scheduled_expenses FOR DELETE USING (auth.uid() = user_id);
+
+-- Recurring obligations (petrol, rent, subscriptions)
+CREATE TABLE IF NOT EXISTS recurring_obligations (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+    name TEXT NOT NULL,
+    amount DECIMAL(12, 2) NOT NULL CHECK (amount > 0),
+    category VARCHAR(50) DEFAULT 'Other',
+    frequency VARCHAR(20) NOT NULL CHECK (frequency IN ('daily', 'weekly', 'monthly', 'quarterly', 'yearly')),
+    next_due_date DATE,
+    is_active BOOLEAN NOT NULL DEFAULT TRUE,
+    source VARCHAR(20) NOT NULL DEFAULT 'chat' CHECK (source IN ('chat', 'manual')),
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS idx_recurring_obligations_user ON recurring_obligations(user_id, is_active);
+
+ALTER TABLE recurring_obligations ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "Users can view own recurring" ON recurring_obligations;
+CREATE POLICY "Users can view own recurring" ON recurring_obligations FOR SELECT USING (auth.uid() = user_id);
+DROP POLICY IF EXISTS "Users can insert own recurring" ON recurring_obligations;
+CREATE POLICY "Users can insert own recurring" ON recurring_obligations FOR INSERT WITH CHECK (auth.uid() = user_id);
+DROP POLICY IF EXISTS "Users can update own recurring" ON recurring_obligations;
+CREATE POLICY "Users can update own recurring" ON recurring_obligations FOR UPDATE USING (auth.uid() = user_id);
+DROP POLICY IF EXISTS "Users can delete own recurring" ON recurring_obligations;
+CREATE POLICY "Users can delete own recurring" ON recurring_obligations FOR DELETE USING (auth.uid() = user_id);
+
+-- Assistant memory facts (personal context)
+CREATE TABLE IF NOT EXISTS assistant_memory_facts (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+    fact_key VARCHAR(120) NOT NULL,
+    fact_value TEXT NOT NULL,
+    source_message_id UUID REFERENCES chat_messages(id) ON DELETE SET NULL,
+    importance INTEGER NOT NULL DEFAULT 5 CHECK (importance >= 1 AND importance <= 10),
+    expires_at TIMESTAMP WITH TIME ZONE,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    UNIQUE (user_id, fact_key)
+);
+
+CREATE INDEX IF NOT EXISTS idx_memory_facts_user ON assistant_memory_facts(user_id);
+
+ALTER TABLE assistant_memory_facts ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "Users can view own memory" ON assistant_memory_facts;
+CREATE POLICY "Users can view own memory" ON assistant_memory_facts FOR SELECT USING (auth.uid() = user_id);
+DROP POLICY IF EXISTS "Users can insert own memory" ON assistant_memory_facts;
+CREATE POLICY "Users can insert own memory" ON assistant_memory_facts FOR INSERT WITH CHECK (auth.uid() = user_id);
+DROP POLICY IF EXISTS "Users can update own memory" ON assistant_memory_facts;
+CREATE POLICY "Users can update own memory" ON assistant_memory_facts FOR UPDATE USING (auth.uid() = user_id);
+DROP POLICY IF EXISTS "Users can delete own memory" ON assistant_memory_facts;
+CREATE POLICY "Users can delete own memory" ON assistant_memory_facts FOR DELETE USING (auth.uid() = user_id);
+
 -- Auto-update updated_at on user_profiles
 CREATE OR REPLACE FUNCTION update_updated_at_column()
 RETURNS TRIGGER AS $$
@@ -268,3 +393,111 @@ INSERT INTO expense_templates (template_id, semester_number, expense_name, categ
 INSERT INTO expense_templates (template_id, semester_number, expense_name, category, typical_amount_min, typical_amount_max, typical_amount_avg, is_mandatory, is_recurring, frequency, typical_occurrence_week, location_dependent, notes) VALUES ('TMPL_MED', 3, 'Anatomy Dissection Atlas', 'Academic', 1229.94, 3551.1, 2307.2, True, False, 'once', 2, False, 'Specialized atlas for gross anatomy practical sessions') ON CONFLICT (template_id, semester_number, expense_name) DO NOTHING;
 INSERT INTO expense_templates (template_id, semester_number, expense_name, category, typical_amount_min, typical_amount_max, typical_amount_avg, is_mandatory, is_recurring, frequency, typical_occurrence_week, location_dependent, notes) VALUES ('TMPL_MED', 7, 'NEET-PG / USMLE Preparation', 'Certification', 5116.75, 17848.93, 9879.82, False, False, 'once', 4, True, 'PG entrance coaching; major investment in final years; metro city pricing significantly higher') ON CONFLICT (template_id, semester_number, expense_name) DO NOTHING;
 INSERT INTO expense_templates (template_id, semester_number, expense_name, category, typical_amount_min, typical_amount_max, typical_amount_avg, is_mandatory, is_recurring, frequency, typical_occurrence_week, location_dependent, notes) VALUES ('TMPL_MED', 8, 'Hospital Practical / OSCE Fee', 'Examination', 1581.37, 4891.77, 3050.12, True, False, 'once_per_semester', 13, False, 'Objective Structured Clinical Examination fee; mandatory for MBBS completion') ON CONFLICT (template_id, semester_number, expense_name) DO NOTHING;
+
+-- ===============================================
+-- USER SETTINGS TABLES (Added 2026-05-22)
+-- ===============================================
+
+-- 1. Notification Preferences Table
+CREATE TABLE IF NOT EXISTS notification_preferences (
+    user_id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
+    
+    -- Critical Alerts
+    survival_alerts BOOLEAN DEFAULT TRUE,
+    overspending_warnings BOOLEAN DEFAULT TRUE,
+    anomaly_detection BOOLEAN DEFAULT TRUE,
+    
+    -- Insights & Recommendations
+    budget_milestones BOOLEAN DEFAULT TRUE,
+    savings_opportunities BOOLEAN DEFAULT TRUE,
+    monthly_insights BOOLEAN DEFAULT TRUE,
+    
+    -- Periodic Reports
+    weekly_reports BOOLEAN DEFAULT FALSE,
+    academic_reminders BOOLEAN DEFAULT FALSE,
+    
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+ALTER TABLE notification_preferences ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "Users can view own notification preferences" ON notification_preferences;
+CREATE POLICY "Users can view own notification preferences"
+    ON notification_preferences FOR SELECT
+    USING (auth.uid() = user_id);
+
+DROP POLICY IF EXISTS "Users can update own notification preferences" ON notification_preferences;
+CREATE POLICY "Users can update own notification preferences"
+    ON notification_preferences FOR UPDATE
+    USING (auth.uid() = user_id)
+    WITH CHECK (auth.uid() = user_id);
+
+DROP POLICY IF EXISTS "Users can insert own notification preferences" ON notification_preferences;
+CREATE POLICY "Users can insert own notification preferences"
+    ON notification_preferences FOR INSERT
+    WITH CHECK (auth.uid() = user_id);
+
+-- 2. Privacy Settings Table
+CREATE TABLE IF NOT EXISTS privacy_settings (
+    user_id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
+    
+    -- Data Sharing Preferences
+    data_sharing_for_insights BOOLEAN DEFAULT TRUE,
+    anonymous_peer_comparison BOOLEAN DEFAULT TRUE,
+    store_transaction_history BOOLEAN DEFAULT TRUE,
+    
+    -- Security Settings
+    two_factor_enabled BOOLEAN DEFAULT FALSE,
+    login_notifications BOOLEAN DEFAULT TRUE,
+    
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+ALTER TABLE privacy_settings ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "Users can view own privacy settings" ON privacy_settings;
+CREATE POLICY "Users can view own privacy settings"
+    ON privacy_settings FOR SELECT
+    USING (auth.uid() = user_id);
+
+DROP POLICY IF EXISTS "Users can update own privacy settings" ON privacy_settings;
+CREATE POLICY "Users can update own privacy settings"
+    ON privacy_settings FOR UPDATE
+    USING (auth.uid() = user_id)
+    WITH CHECK (auth.uid() = user_id);
+
+DROP POLICY IF EXISTS "Users can insert own privacy settings" ON privacy_settings;
+CREATE POLICY "Users can insert own privacy settings"
+    ON privacy_settings FOR INSERT
+    WITH CHECK (auth.uid() = user_id);
+
+-- 3. Create function to auto-create default settings when user signs up
+CREATE OR REPLACE FUNCTION create_default_user_settings()
+RETURNS TRIGGER AS $$
+BEGIN
+    -- Insert default notification preferences
+    INSERT INTO notification_preferences (user_id)
+    VALUES (NEW.id)
+    ON CONFLICT (user_id) DO NOTHING;
+    
+    -- Insert default privacy settings
+    INSERT INTO privacy_settings (user_id)
+    VALUES (NEW.id)
+    ON CONFLICT (user_id) DO NOTHING;
+    
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+-- 4. Create trigger to auto-create settings on user profile creation
+DROP TRIGGER IF EXISTS on_user_profile_created ON user_profiles;
+CREATE TRIGGER on_user_profile_created
+    AFTER INSERT ON user_profiles
+    FOR EACH ROW
+    EXECUTE FUNCTION create_default_user_settings();
+
+-- 5. Create indexes for better query performance
+CREATE INDEX IF NOT EXISTS idx_notification_preferences_user_id ON notification_preferences(user_id);
+CREATE INDEX IF NOT EXISTS idx_privacy_settings_user_id ON privacy_settings(user_id);

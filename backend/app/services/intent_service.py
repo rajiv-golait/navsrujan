@@ -5,7 +5,43 @@ import re
 from app.llm.groq_client import get_groq_client
 
 KEYWORD_INTENT_MAP = {
-    "SPENDING_ANALYSIS": [r"overspending", r"where.*spending", r"biggest expense"],
+    "BALANCE_QUERY": [
+        r"balance",
+        r"kitna paisa",
+        r"bank balance",
+        r"how much (?:money|cash) (?:left|remaining)",
+        r"paisa bacha",
+    ],
+    "SCHEDULE_EXPENSE": [
+        r"will buy",
+        r"going to buy",
+        r"plan(?:ning)? to buy",
+        r"in \d+ days",
+        r"next week.*buy",
+    ],
+    "RECURRING_ADD": [
+        r"every day",
+        r"every week",
+        r"monthly rent",
+        r"petrol",
+        r"subscription",
+        r"recurring",
+    ],
+    "PURCHASE_DECISION": [
+        r"should i buy",
+        r"can i afford",
+        r"is it okay to spend",
+        r"worth buying",
+        r"kharidu",
+    ],
+    "RECALL_PLAN": [
+        r"what did i plan",
+        r"upcoming expense",
+        r"future purchase",
+        r"scheduled",
+        r"planned spend",
+    ],
+    "SPENDING_ANALYSIS": [r"overspending", r"where.*spending", r"biggest expense", r"faltu"],
     "SURVIVAL_CHECK": [r"survive", r"month end", r"run out", r"last until"],
     "CATEGORY_QUERY": [r"how much.*on", r"spent on", r"transport cost"],
     "FORECAST": [r"predict", r"forecast", r"next month"],
@@ -21,18 +57,15 @@ VALID_INTENTS = frozenset(KEYWORD_INTENT_MAP.keys()) | {"GENERAL"}
 
 async def classify_intent(text: str) -> str:
     text_lower = text.lower()
-    
-    # 1. Keyword matching
+
     for intent, patterns in KEYWORD_INTENT_MAP.items():
         for pattern in patterns:
             if re.search(pattern, text_lower):
                 return intent
-                
-    # 2. LLM Fallback
+
     groq = get_groq_client()
     llm_intent = await groq.classify_intent(text)
-    
-    # Map old lowercase intents to new uppercase ones if needed
+
     intent_mapping = {
         "add_expense": "TRANSACTION_ADD",
         "burn_rate": "SPENDING_ANALYSIS",
@@ -43,11 +76,16 @@ async def classify_intent(text: str) -> str:
         "anomaly": "SPENDING_ANALYSIS",
         "personality": "SPENDING_ANALYSIS",
         "general": "GENERAL",
+        "balance_query": "BALANCE_QUERY",
+        "schedule_expense": "SCHEDULE_EXPENSE",
+        "recurring_add": "RECURRING_ADD",
+        "purchase_decision": "PURCHASE_DECISION",
+        "recall_plan": "RECALL_PLAN",
     }
-    
+
     mapped_intent = intent_mapping.get(llm_intent.lower(), llm_intent.upper())
-    
+
     if mapped_intent in VALID_INTENTS:
         return mapped_intent
-        
+
     return "GENERAL"

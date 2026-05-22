@@ -63,9 +63,10 @@ export default function AcademicExpensesPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold text-[var(--stitch-on-surface)]">Academic Expenses</h1>
-      </div>
+      <header>
+        <p className="text-label-caps text-[var(--stitch-on-surface-variant)]">Academic</p>
+        <h1 className="text-headline-mobile text-[var(--stitch-on-surface)]">Academic expenses</h1>
+      </header>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2 space-y-6">
@@ -90,7 +91,7 @@ export default function AcademicExpensesPage() {
             </button>
           </div>
 
-          <div className="bg-[var(--stitch-surface-container-low)] p-6 rounded-2xl">
+          <div className="vault-card p-6">
             {activeTab === "current" && (
               <div className="space-y-4">
                 {expensesLoading ? (

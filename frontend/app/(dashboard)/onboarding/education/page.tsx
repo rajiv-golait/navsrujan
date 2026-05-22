@@ -7,7 +7,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { toast } from "sonner";
 
-import { useSetupEducationProfile } from "@/lib/hooks/useEducation";
+import { supabase } from "@/lib/supabase";
+import { useAuth } from "@/lib/hooks/useAuth";
 
 const educationSchema = z.object({
   education_type: z.string().min(1, "Education type is required"),
@@ -23,7 +24,7 @@ type EducationFormValues = z.input<typeof educationSchema>;
 
 export default function EducationOnboardingPage() {
   const router = useRouter();
-  const setupProfile = useSetupEducationProfile();
+  const { user } = useAuth();
   
   const {
     register,
@@ -40,12 +41,40 @@ export default function EducationOnboardingPage() {
   });
 
   const onSubmit = async (data: EducationFormValues) => {
+    if (!user?.id) {
+      toast.error("No user found. Please log in again.");
+      return;
+    }
+
     try {
       const parsed = educationSchema.parse(data);
-      await setupProfile.mutateAsync(parsed);
+      
+      // Upsert directly to Supabase user_profiles table
+      const { error: upsertError } = await supabase
+        .from("user_profiles")
+        .upsert({
+          id: user.id,
+          education_type: parsed.education_type,
+          university: parsed.university,
+          current_semester: parsed.current_semester,
+          degree_start_date: parsed.degree_start_date,
+          expected_graduation: parsed.expected_graduation,
+          location_type: parsed.location_type,
+          accommodation_type: parsed.accommodation_type,
+          updated_at: new Date().toISOString(),
+        }, {
+          onConflict: 'id'
+        });
+
+      if (upsertError) {
+        console.error("Profile upsert error:", upsertError);
+        throw upsertError;
+      }
+
       toast.success("Education profile saved!");
-      router.push("/dashboard");
+      router.push("/chat");
     } catch (error) {
+      console.error("Failed to save profile:", error);
       toast.error("Failed to save profile. Please try again.");
     }
   };

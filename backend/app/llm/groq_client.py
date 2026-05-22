@@ -11,6 +11,7 @@ from app.core.config import settings
 from app.llm.prompts import (
     FORMAT_RESPONSE_SYSTEM,
     INTENT_CLASSIFY_SYSTEM,
+    MEMORY_EXTRACT_SYSTEM,
     PARSE_EXPENSE_EXAMPLES,
     PARSE_EXPENSE_SYSTEM,
     VALID_INTENTS,
@@ -122,6 +123,27 @@ class GroqClient:
         )
 
         return (response.choices[0].message.content or "").strip()
+
+    async def extract_financial_memory(self, text: str) -> dict[str, Any]:
+        user_prompt = (
+            f"Current date: {date.today().isoformat()}\n\n"
+            f"Message: {text}"
+        )
+        try:
+            response = await self._create_completion(
+                INTENT_MODEL,
+                INTENT_MODEL,
+                messages=[
+                    {"role": "system", "content": MEMORY_EXTRACT_SYSTEM},
+                    {"role": "user", "content": user_prompt},
+                ],
+                response_format={"type": "json_object"},
+                temperature=0.0,
+            )
+            content = response.choices[0].message.content or "{}"
+            return json.loads(content)
+        except Exception:  # noqa: BLE001
+            return {}
 
 
 _groq_client: GroqClient | None = None

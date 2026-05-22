@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import re
 from datetime import datetime, timezone
 from typing import Any, Optional
 from uuid import UUID, uuid4
@@ -13,6 +14,8 @@ from app.llm.groq_client import get_groq_client
 from app.middleware.prompt_injection import sanitize_prompt
 from app.services.response_validator import validate_response_numbers
 from app.services.analytics_service import build_full_snapshot
+from app.services.balance_service import compute_balance, compute_purchase_impact
+from app.services.memory_extractor import build_memory_context, extract_and_persist
 from app.schemas.chat import ChatMessageResponse, ChatReplyResponse, ConversationSummary
 from app.services import nlp_service
 
@@ -73,8 +76,9 @@ class ChatService:
         conversation_id: Optional[UUID] = None,
     ) -> ChatReplyResponse:
         content = sanitize_prompt(content)
-        
+
         from app.services.intent_service import classify_intent
+
         intent = await classify_intent(content)
 
         if conversation_id is None:
@@ -82,7 +86,15 @@ class ChatService:
         else:
             self._ensure_conversation(conversation_id)
 
+        memory_result = await extract_and_persist(
+            self.client,
+            self.user_id,
+            content,
+            auto_save=intent in {"SCHEDULE_EXPENSE", "RECURRING_ADD", "GENERAL"},
+        )
+
         snapshot = await self._build_snapshot_for_intent(intent, content)
+        snapshot["memory_extraction"] = memory_result
 
         groq = get_groq_client()
         reply = await groq.format_analytics_response(content, snapshot, intent)
@@ -119,13 +131,25 @@ class ChatService:
     ) -> dict[str, Any]:
         if intent == "TRANSACTION_ADD":
             parsed = await nlp_service.parse_expense_text(content)
+            balance = compute_balance(self.client, self.user_id)
             return {
                 "intent": intent,
                 "parsed": parsed.model_dump(mode="json"),
+                "balance": balance,
             }
 
         snapshot = build_full_snapshot(self.client, self.user_id)
         snapshot["intent"] = intent
+        snapshot["balance"] = compute_balance(self.client, self.user_id)
+        snapshot.update(build_memory_context(self.client, self.user_id))
+
+        if intent == "PURCHASE_DECISION":
+            amount = _extract_amount_from_text(content)
+            if amount:
+                snapshot["purchase_check"] = compute_purchase_impact(
+                    self.client, self.user_id, amount
+                )
+
         return snapshot
 
     def _create_conversation(self, first_message: str) -> UUID:
@@ -149,7 +173,7 @@ class ChatService:
             .maybe_single()
             .execute()
         )
-        if not response.data:
+        if not response or not response.data:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail="Conversation not found",
@@ -203,3 +227,14 @@ class ChatService:
             return None
         content = response.data[0]["content"]
         return content[:80] + ("..." if len(content) > 80 else "")
+
+
+def _extract_amount_from_text(text: str) -> Optional[float]:
+    match = re.search(r"(?:₹|rs\.?|inr)?\s*([\d,]+(?:\.\d+)?)\s*(?:k|thousand)?", text, re.I)
+    if not match:
+        return None
+    raw = match.group(1).replace(",", "")
+    amount = float(raw)
+    if "k" in text.lower()[match.start() : match.end() + 2]:
+        amount *= 1000
+    return amount

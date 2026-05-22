@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { format, parseISO } from "date-fns";
 
 import { BurnRateGauge } from "@/components/dashboard/BurnRateGauge";
 import { MLInsightCard } from "@/components/dashboard/MLInsightCard";
@@ -26,9 +27,40 @@ export default function DashboardPage() {
     snapshot?.monthly_budget != null
       ? Math.round(snapshot.monthly_budget / 30)
       : undefined;
+  const todayKey = format(new Date(), "yyyy-MM-dd");
+  const weekStart = new Date();
+  weekStart.setDate(weekStart.getDate() - 6);
+  weekStart.setHours(0, 0, 0, 0);
+  const spentToday = (transactions ?? []).reduce((sum, txn) => {
+    if ((txn.transaction_type ?? "debit") !== "debit") return sum;
+    return txn.transaction_date.startsWith(todayKey) ? sum + Number(txn.amount) : sum;
+  }, 0);
+  const spentWeek = (transactions ?? []).reduce((sum, txn) => {
+    if ((txn.transaction_type ?? "debit") !== "debit") return sum;
+    const parsed = parseISO(txn.transaction_date);
+    return parsed >= weekStart ? sum + Number(txn.amount) : sum;
+  }, 0);
 
   return (
     <div className="space-y-6">
+      <header>
+        <p className="text-label-caps text-[var(--stitch-on-surface-variant)]">Overview</p>
+        <h1 className="text-headline-mobile text-[var(--stitch-on-surface)]">Financial snapshot</h1>
+      </header>
+      <section className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="vault-card p-4">
+          <p className="text-label-caps text-[var(--stitch-on-surface-variant)]">Spent Today</p>
+          <p className="text-3xl font-bold tracking-tight text-[var(--stitch-on-surface)] mt-1">
+            ₹{spentToday.toLocaleString("en-IN")}
+          </p>
+        </div>
+        <div className="vault-card p-4">
+          <p className="text-label-caps text-[var(--stitch-on-surface-variant)]">Spent This Week</p>
+          <p className="text-3xl font-bold tracking-tight text-[var(--stitch-on-surface)] mt-1">
+            ₹{spentWeek.toLocaleString("en-IN")}
+          </p>
+        </div>
+      </section>
       {/* KPI Strip */}
       <KPIStrip summary={summary} isLoading={summaryLoading} />
 
@@ -48,7 +80,7 @@ export default function DashboardPage() {
           <CategoryBreakdown summary={summary} isLoading={summaryLoading} />
 
           {/* Recent Transactions */}
-          <div className="stitch-card p-6">
+          <div className="vault-card p-6">
             <div className="flex justify-between items-center mb-4">
               <h3 className="text-label-caps text-[var(--stitch-on-surface-variant)]">
                 Recent Transactions

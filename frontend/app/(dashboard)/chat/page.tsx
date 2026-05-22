@@ -1,19 +1,17 @@
 "use client";
 
-import { ChatInterface } from "@/components/chat/ChatInterface";
+import { VaultAdvisor } from "@/components/vault/VaultAdvisor";
 
 export default function ChatPage() {
   return (
     <div className="space-y-4">
       <div>
-        <h1 className="text-headline-mobile md:text-headline-lg text-[var(--stitch-on-surface)]">
-          AI Assistant
+        <p className="text-label-caps text-[var(--stitch-on-surface-variant)]">Vault Advisor</p>
+        <h1 className="text-headline-mobile text-[var(--stitch-on-surface)] tracking-tight">
+          Your balance-aware finance coach
         </h1>
-        <p className="text-sm text-[var(--stitch-on-surface-variant)]">
-          Ask questions about your spending — answers use your real data
-        </p>
       </div>
-      <ChatInterface />
+      <VaultAdvisor />
     </div>
   );
 }

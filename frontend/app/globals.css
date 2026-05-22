@@ -7,10 +7,11 @@
 
 @theme inline {
   /* ── Fonts ── */
-  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
-  --font-mono: var(--font-jetbrains-mono), ui-monospace, monospace;
-  --font-heading: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
-  --font-stat: var(--font-jetbrains-mono), ui-monospace, monospace;
+  --font-sans: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+  --font-heading: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
+  --font-stat: var(--font-geist-mono), ui-monospace, monospace;
+  --color-vault-accent: #4f46e5;
 
   /* ── Stitch brand colors mapped to shadcn vars ── */
   --color-background: var(--background);
@@ -128,39 +129,74 @@
   --stitch-inverse-on-surface: #f3f0ef;
 }
 
-/* Dark theme (keeps original structure but uses purple tones) */
-.dark {
-  --background: #1a1218;
-  --foreground: #f3f0ef;
-  --card: #2a1f28;
-  --card-foreground: #f3f0ef;
-  --popover: #2a1f28;
-  --popover-foreground: #f3f0ef;
-  --primary: #f9abff;
-  --primary-foreground: #35003f;
-  --secondary: #ffb870;
-  --secondary-foreground: #2c1600;
-  --muted: #3a2f38;
-  --muted-foreground: #d5c1d2;
-  --accent: #3a2f38;
-  --accent-foreground: #f3f0ef;
+/* Obsidian Intelligence — Vault dark theme */
+.dark,
+.vault-theme {
+  --background: #051424;
+  --foreground: #d4e4fa;
+  --card: #122131;
+  --card-foreground: #d4e4fa;
+  --popover: #1c2b3c;
+  --popover-foreground: #d4e4fa;
+  --primary: #4f46e5;
+  --primary-foreground: #ffffff;
+  --secondary: #3626ce;
+  --secondary-foreground: #e2dfff;
+  --muted: #0d1c2d;
+  --muted-foreground: #c6c6cb;
+  --accent: #273647;
+  --accent-foreground: #d4e4fa;
   --destructive: #ffb4ab;
-  --border: rgba(255, 255, 255, 0.1);
-  --input: rgba(255, 255, 255, 0.15);
-  --ring: #f9abff;
-  --chart-1: #f9abff;
-  --chart-2: #ffb870;
-  --chart-3: #d5c965;
-  --chart-4: #f9abff;
+  --border: #45474b;
+  --input: #0f1115;
+  --ring: #4f46e5;
+  --chart-1: #4f46e5;
+  --chart-2: #c3c0ff;
+  --chart-3: #bcc7de;
+  --chart-4: #4f46e5;
   --chart-5: #ffb4ab;
-  --sidebar: #2a1f28;
-  --sidebar-foreground: #f3f0ef;
-  --sidebar-primary: #f9abff;
-  --sidebar-primary-foreground: #35003f;
-  --sidebar-accent: #3a2f38;
-  --sidebar-accent-foreground: #f3f0ef;
-  --sidebar-border: rgba(255, 255, 255, 0.1);
-  --sidebar-ring: #f9abff;
+  --sidebar: #0d1c2d;
+  --sidebar-foreground: #d4e4fa;
+  --sidebar-primary: #4f46e5;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #1c2b3c;
+  --sidebar-accent-foreground: #d4e4fa;
+  --sidebar-border: #45474b;
+  --sidebar-ring: #4f46e5;
+
+  --stitch-primary: #4f46e5;
+  --stitch-primary-container: #3626ce;
+  --stitch-on-primary-container: #b3b1ff;
+  --stitch-secondary: #c3c0ff;
+  --stitch-secondary-container: #3626ce;
+  --stitch-on-secondary-container: #b3b1ff;
+  --stitch-tertiary: #bcc7de;
+  --stitch-tertiary-container: #061122;
+  --stitch-surface: #0a1628;
+  --stitch-surface-container: #0f1e2f;
+  --stitch-surface-container-high: #1a2838;
+  --stitch-surface-container-low: #0a1628;
+  --stitch-surface-container-lowest: #020b16;
+  --stitch-on-surface: #d4e4fa;
+  --stitch-on-surface-variant: #c6c6cb;
+  --stitch-outline: #909095;
+  --stitch-outline-variant: #45474b;
+  --stitch-error: #ffb4ab;
+  --stitch-error-container: #93000a;
+  --stitch-inverse-surface: #d4e4fa;
+  --stitch-inverse-on-surface: #233143;
+  --vault-accent: #4f46e5;
+  --surface-0: #020b16;
+  --surface-1: #0a1628;
+  --surface-2: #0f1f3a;
+  --category-food: #f59e0b;
+  --category-transport: #3b82f6;
+  --category-entertainment: #8b5cf6;
+  --category-shopping: #ec4899;
+  --category-bills: #6b7280;
+  --category-education: #10b981;
+  --category-health: #ef4444;
+  --category-other: #64748b;
 }
 
 /* ═══════════════════════════════════════════════════
@@ -172,7 +208,7 @@
   }
   body {
     @apply bg-background text-foreground;
-    font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
+    font-family: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
@@ -303,4 +339,261 @@
 
 .gradient-glow:focus-within::before {
   opacity: 0.3;
+}
+
+/* Vault UI 2.0 utilities */
+.ai-accent-line {
+  position: relative;
+  padding-left: 14px;
+}
+.ai-accent-line::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 2px;
+  bottom: 2px;
+  width: 3px;
+  background: linear-gradient(180deg, var(--vault-accent, #4f46e5), var(--stitch-secondary));
+  border-radius: 2px;
+}
+.glass-panel {
+  backdrop-filter: blur(16px);
+  background: rgba(2, 11, 22, 0.85);
+  border: 1px solid var(--stitch-outline-variant);
+}
+.text-data-mono {
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+}
+.vault-card {
+  background: linear-gradient(155deg, color-mix(in srgb, var(--surface-2) 92%, white 8%), var(--surface-1));
+  border: 1px solid color-mix(in srgb, var(--stitch-outline-variant) 70%, transparent);
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.28);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+.vault-card:hover {
+  border-color: color-mix(in srgb, var(--vault-accent) 28%, var(--stitch-outline-variant));
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.34);
+}
+.vault-card-elevated {
+  background: linear-gradient(160deg, color-mix(in srgb, var(--surface-2) 92%, white 8%), var(--surface-0));
+  border: 1px solid color-mix(in srgb, var(--vault-accent) 32%, var(--stitch-outline-variant));
+  border-radius: 18px;
+  box-shadow: 0 14px 32px rgba(0, 0, 0, 0.36);
+}
+.vault-stat {
+  font-family: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
+  font-size: clamp(2rem, 4vw, 3rem);
+  line-height: 1.1;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+}
+.category-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  border-radius: 9999px;
+  border: 1px solid color-mix(in srgb, currentColor 28%, transparent);
+  padding: 0.2rem 0.55rem;
+  font-size: 11px;
+  line-height: 1;
+  font-weight: 600;
+}
+.category-color-food { color: var(--category-food); }
+.category-color-transport { color: var(--category-transport); }
+.category-color-entertainment { color: var(--category-entertainment); }
+.category-color-shopping { color: var(--category-shopping); }
+.category-color-bills { color: var(--category-bills); }
+.category-color-education { color: var(--category-education); }
+.category-color-health { color: var(--category-health); }
+.category-color-other { color: var(--category-other); }
+.category-dot {
+  height: 0.65rem;
+  width: 0.65rem;
+  border-radius: 9999px;
+}
+.category-bg-food { background: color-mix(in srgb, var(--category-food) 22%, transparent); }
+.category-bg-transport { background: color-mix(in srgb, var(--category-transport) 22%, transparent); }
+.category-bg-entertainment { background: color-mix(in srgb, var(--category-entertainment) 22%, transparent); }
+.category-bg-shopping { background: color-mix(in srgb, var(--category-shopping) 22%, transparent); }
+.category-bg-bills { background: color-mix(in srgb, var(--category-bills) 22%, transparent); }
+.category-bg-education { background: color-mix(in srgb, var(--category-education) 22%, transparent); }
+.category-bg-health { background: color-mix(in srgb, var(--category-health) 22%, transparent); }
+.category-bg-other { background: color-mix(in srgb, var(--category-other) 22%, transparent); }
+.category-solid-food { background-color: var(--category-food); }
+.category-solid-transport { background-color: var(--category-transport); }
+.category-solid-entertainment { background-color: var(--category-entertainment); }
+.category-solid-shopping { background-color: var(--category-shopping); }
+.category-solid-bills { background-color: var(--category-bills); }
+.category-solid-education { background-color: var(--category-education); }
+.category-solid-health { background-color: var(--category-health); }
+.category-solid-other { background-color: var(--category-other); }
+.ios-row {
+  border-radius: 14px;
+  border: 1px solid color-mix(in srgb, var(--stitch-outline-variant) 70%, transparent);
+  background: color-mix(in srgb, var(--surface-1) 88%, white 12%);
+  padding: 0.85rem 0.95rem;
+}
+
+/* Responsive spacing utilities */
+.safe-bottom {
+  padding-bottom: env(safe-area-inset-bottom, 0);
+}
+
+/* Forecast chart styles */
+.forecast-chart-container {
+  position: relative;
+  width: 100%;
+  min-height: 300px;
+}
+
+.forecast-line {
+  stroke-width: 2px;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.forecast-area {
+  fill-opacity: 0.15;
+}
+
+.chart-tooltip {
+  background: var(--stitch-surface-container);
+  border: 1px solid var(--stitch-outline);
+  border-radius: 8px;
+  padding: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* Alert gradient styles */
+.alert-gradient-critical {
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.15) 0%, rgba(220, 38, 38, 0.05) 100%);
+}
+
+.alert-gradient-high {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.15) 0%, rgba(217, 119, 6, 0.05) 100%);
+}
+
+.alert-gradient-medium {
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.15) 0%, rgba(37, 99, 235, 0.05) 100%);
+}
+
+.alert-glow {
+  box-shadow: 0 0 20px rgba(239, 68, 68, 0.3);
+}
+
+/* Progress bar animations */
+@keyframes progressFill {
+  from {
+    width: 0;
+  }
+  to {
+    width: var(--progress-width);
+  }
+}
+
+.progress-animated {
+  animation: progressFill 1s ease-out;
+}
+
+/* Number counter animation */
+@keyframes countUp {
+  from {
+    opacity: 0.5;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.count-up {
+  animation: countUp 0.6s ease-out;
+}
+
+/* Card hover effects */
+.insight-card {
+  transition: all 0.2s ease;
+}
+
+.insight-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+}
+
+/* Chart grid improvements */
+.recharts-cartesian-grid-horizontal line,
+.recharts-cartesian-grid-vertical line {
+  stroke: var(--stitch-outline-variant);
+  opacity: 0.3;
+}
+
+/* Pulse animation for loading states */
+@keyframes pulse-subtle {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
+.pulse-subtle {
+  animation: pulse-subtle 2s ease-in-out infinite;
+}
+
+/* Smooth transitions for dynamic content */
+.fade-in {
+  animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Mobile-responsive touch targets */
+@media (max-width: 768px) {
+  .touch-target {
+    min-height: 48px;
+    min-width: 48px;
+  }
+  
+  .forecast-chart-container {
+    min-height: 240px;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .vault-card {
+    border-width: 2px;
+  }
+  
+  .forecast-line {
+    stroke-width: 3px;
+  }
+}
+
+/* Smooth fade-in animation for multi-step forms */
+.animate-fade-in {
+  animation: fade-in 0.3s ease-in-out;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

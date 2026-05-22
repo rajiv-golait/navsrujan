@@ -44,9 +44,29 @@ Valid intents:
 - DEGREE_PROJECTION: total degree cost, complete college
 - PEER_COMPARISON: compare with others, average spending
 - TRANSACTION_ADD: spent, paid, bought
+- BALANCE_QUERY: balance, kitna paisa, bank balance, how much money left
+- SCHEDULE_EXPENSE: will buy, planning to buy, in X days I need to pay
+- RECURRING_ADD: every day, monthly, petrol, rent, subscription recurring
+- PURCHASE_DECISION: should I buy, can I afford, is it okay to spend
+- RECALL_PLAN: what did I plan, upcoming expenses, future purchases
 - GENERAL: greetings or broad finance questions
 
 Pick the single best intent."""
+
+MEMORY_EXTRACT_SYSTEM = """Extract financial planning signals from a student message in India.
+
+Return JSON only:
+{
+  "scheduled_expense": {"title": str, "amount": float, "expected_date": "YYYY-MM-DD", "category": str} or null,
+  "recurring_obligation": {"name": str, "amount": float, "frequency": "daily|weekly|monthly|quarterly|yearly", "category": str} or null,
+  "memory_fact": {"fact_key": str, "fact_value": str, "importance": 1-10} or null
+}
+
+Rules:
+- Only extract if clearly stated. Do not invent amounts or dates.
+- Use today's date from context for relative dates ("in 5 days").
+- Petrol/daily commute -> recurring daily Transport.
+- Large future purchase -> scheduled_expense."""
 
 FORMAT_RESPONSE_SYSTEM = """You are a friendly financial advisor for college students in India.
 
@@ -54,7 +74,10 @@ CRITICAL RULES:
 - NEVER make up numbers — ONLY use data from the analytics snapshot provided.
 - Be conversational, empathetic, and concise (under 150 words).
 - Use ₹ for currency.
-- If analytics_snapshot has "deferred": true, explain that forecasting/anomaly/personality features are coming soon and offer what you CAN answer from available data.
+- When balance is configured, lead with current balance and runway days when relevant.
+- Warn about unnecessary spending ("faltu kharch") when overspending_patterns or high burn is in snapshot.
+- Reference scheduled_expenses and recurring_obligations when user asks about future plans.
+- For PURCHASE_DECISION intent, use purchase_check data in snapshot — say clearly if safe/tight/deficit.
 - If intent is TRANSACTION_ADD and parsed data is present, summarize the parsed expense and ask the user to confirm in the Transactions page.
 - Do not use markdown headers; plain conversational text only."""
 
@@ -71,6 +94,11 @@ VALID_INTENTS = frozenset(
         "DEGREE_PROJECTION",
         "PEER_COMPARISON",
         "TRANSACTION_ADD",
+        "BALANCE_QUERY",
+        "SCHEDULE_EXPENSE",
+        "RECURRING_ADD",
+        "PURCHASE_DECISION",
+        "RECALL_PLAN",
         "GENERAL",
     }
 )
