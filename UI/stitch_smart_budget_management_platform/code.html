@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport"/>
+<title>StriveBudget - Student Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-tint": "#9a25ae",
+                        "on-tertiary": "#ffffff",
+                        "on-secondary-fixed-variant": "#693c00",
+                        "inverse-primary": "#f9abff",
+                        "on-primary-fixed-variant": "#7b008f",
+                        "on-surface": "#1c1b1b",
+                        "on-primary": "#ffffff",
+                        "secondary-container": "#ff9800",
+                        "surface-container-low": "#f6f3f2",
+                        "on-primary-container": "#ffcaff",
+                        "background": "#fcf9f8",
+                        "tertiary-fixed": "#f2e57e",
+                        "on-secondary": "#ffffff",
+                        "on-primary-fixed": "#35003f",
+                        "primary-fixed": "#ffd6fe",
+                        "on-surface-variant": "#514250",
+                        "secondary-fixed": "#ffdcbe",
+                        "inverse-surface": "#313030",
+                        "inverse-on-surface": "#f3f0ef",
+                        "primary-fixed-dim": "#f9abff",
+                        "on-secondary-fixed": "#2c1600",
+                        "on-tertiary-container": "#474000",
+                        "primary-container": "#9c27b0",
+                        "tertiary": "#695f00",
+                        "surface-bright": "#fcf9f8",
+                        "secondary-fixed-dim": "#ffb870",
+                        "surface-container-lowest": "#ffffff",
+                        "primary": "#7e0092",
+                        "outline": "#837281",
+                        "surface-variant": "#e5e2e1",
+                        "on-background": "#1c1b1b",
+                        "tertiary-fixed-dim": "#d5c965",
+                        "surface-container": "#f0edec",
+                        "error-container": "#ffdad6",
+                        "on-tertiary-fixed-variant": "#4f4800",
+                        "on-error": "#ffffff",
+                        "surface-container-high": "#ebe7e7",
+                        "secondary": "#8b5000",
+                        "surface-dim": "#dcd9d9",
+                        "on-error-container": "#93000a",
+                        "on-tertiary-fixed": "#201c00",
+                        "error": "#ba1a1a",
+                        "on-secondary-container": "#653900",
+                        "tertiary-container": "#b9ad4d",
+                        "surface-container-highest": "#e5e2e1",
+                        "surface": "#fcf9f8",
+                        "outline-variant": "#d5c1d2"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "stack-sm": "0.5rem",
+                        "margin-mobile": "1.25rem",
+                        "gutter": "1rem",
+                        "stack-lg": "1.5rem",
+                        "unit": "8px",
+                        "stack-md": "1rem"
+                    },
+                    "fontFamily": {
+                        "headline-lg-mobile": ["Inter"],
+                        "stat-sm": ["JetBrains Mono"],
+                        "stat-lg": ["JetBrains Mono"],
+                        "headline-xl": ["Inter"],
+                        "label-caps": ["JetBrains Mono"],
+                        "headline-lg": ["Inter"],
+                        "body-md": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                        "stat-sm": ["14px", {"lineHeight": "20px", "fontWeight": "500"}],
+                        "stat-lg": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "headline-xl": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "label-caps": ["12px", {"lineHeight": "16px", "fontWeight": "700"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .glass-card { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(8px); }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        .gauges-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 1rem; }
+    </style>
+</head>
+<body class="bg-background text-on-background min-h-screen">
+<!-- Top Navigation (Mobile) -->
+<header class="md:hidden fixed top-0 w-full z-50 bg-background flex justify-between items-center px-margin-mobile h-16 w-full max-w-[480px] mx-auto">
+<div class="flex items-center gap-2">
+<div class="w-10 h-10 rounded-full bg-primary-container flex items-center justify-center overflow-hidden">
+<img alt="Student Profile Photo" class="w-full h-full object-cover" data-alt="A bright, high-key professional headshot of a diverse university student in a modern campus setting. The lighting is soft and natural, reflecting a clean, light-mode aesthetic. The background features blurred architectural elements of a contemporary library, with subtle purple accents echoing the brand's primary color." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA8NyZyOjjo4EiXeTb9ZkigKaGhuFjx4CwW5-76BVH9b4ypmVRjYYcdBeXYxO2Jsw4qJMpA55mQGQONPtSGY5F9b4_-GUKQogHSf6xEh2zOlQayEFEcLoZzkz7YESMoG62EXCmsypLtFKD9cj2AbPRTs8Hn2uSciNUINaaBeUvBGR4iJ8Ik_7H7dcbyhs3Wu2LcGG3iDTeRNN5RSYcNAlxPM9EaUxI-Dns1FtTsNfv1CZYjnoLNiyrUcG4PxdAK_Rk3vJqXhuxoHw"/>
+</div>
+<span class="font-headline-lg-mobile text-headline-lg-mobile font-bold text-primary">StriveBudget</span>
+</div>
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container-low transition-colors active:scale-95">
+<span class="material-symbols-outlined text-primary">notifications</span>
+</button>
+</header>
+<!-- Navigation Drawer (Desktop) -->
+<aside class="hidden md:flex h-full w-64 fixed left-0 top-0 flex-col bg-surface-container-low py-stack-lg gap-stack-sm border-r border-outline-variant">
+<div class="px-6 mb-8">
+<h1 class="font-headline-lg text-headline-lg font-bold text-primary">StriveBudget</h1>
+<p class="text-on-surface-variant text-sm">Student Account • v1.0.2</p>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-stack-md bg-primary-container text-on-primary-container rounded-lg px-4 py-3 mx-2 transition-transform hover:translate-x-1" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-body-md text-body-md">Dashboard</span>
+</a>
+<a class="flex items-center gap-stack-md text-on-surface-variant px-4 py-3 mx-2 hover:bg-surface-container-high transition-transform hover:translate-x-1" href="#">
+<span class="material-symbols-outlined">payments</span>
+<span class="font-body-md text-body-md">Transactions</span>
+</a>
+<a class="flex items-center gap-stack-md text-on-surface-variant px-4 py-3 mx-2 hover:bg-surface-container-high transition-transform hover:translate-x-1" href="#">
+<span class="material-symbols-outlined">auto_stories</span>
+<span class="font-body-md text-body-md">Academic Budget</span>
+</a>
+<a class="flex items-center gap-stack-md text-on-surface-variant px-4 py-3 mx-2 hover:bg-surface-container-high transition-transform hover:translate-x-1" href="#">
+<span class="material-symbols-outlined">smart_toy</span>
+<span class="font-body-md text-body-md">AI Assistant</span>
+</a>
+<a class="flex items-center gap-stack-md text-on-surface-variant px-4 py-3 mx-2 hover:bg-surface-container-high transition-transform hover:translate-x-1" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-body-md text-body-md">Settings</span>
+</a>
+</nav>
+</aside>
+<!-- Main Content Canvas -->
+<main class="pt-20 pb-24 md:pt-10 md:pb-10 md:pl-72 px-margin-mobile max-w-[1200px] mx-auto">
+<!-- Top Highlights: Swipeable/Grid -->
+<section class="flex overflow-x-auto hide-scrollbar snap-x snap-mandatory gap-gutter md:grid md:grid-cols-3 mb-stack-lg">
+<!-- Total Spent -->
+<div class="min-w-[280px] md:min-w-0 snap-center bg-surface-container-lowest p-stack-md rounded-[1.5rem] shadow-[0_4px_16px_rgba(0,0,0,0.04)] border border-outline-variant/10">
+<p class="font-label-caps text-label-caps text-on-surface-variant uppercase mb-1">Total Spent</p>
+<div class="flex items-baseline gap-2">
+<span class="font-stat-lg text-stat-lg text-on-surface">₹14,250</span>
+<span class="font-stat-sm text-stat-sm text-error">↑ 12%</span>
+</div>
+<div class="mt-4 h-1 w-full bg-surface-container-high rounded-full overflow-hidden">
+<div class="h-full bg-primary w-3/4 rounded-full"></div>
+</div>
+</div>
+<!-- This Month -->
+<div class="min-w-[280px] md:min-w-0 snap-center bg-surface-container-lowest p-stack-md rounded-[1.5rem] shadow-[0_4px_16px_rgba(0,0,0,0.04)] border border-outline-variant/10">
+<p class="font-label-caps text-label-caps text-on-surface-variant uppercase mb-1">This Month</p>
+<div class="flex items-baseline gap-2">
+<span class="font-stat-lg text-stat-lg text-on-surface">₹8,120</span>
+<span class="font-stat-sm text-stat-sm text-tertiary">Safe</span>
+</div>
+<div class="mt-4 h-1 w-full bg-surface-container-high rounded-full overflow-hidden">
+<div class="h-full bg-secondary-container w-1/2 rounded-full"></div>
+</div>
+</div>
+<!-- Budget Left -->
+<div class="min-w-[280px] md:min-w-0 snap-center bg-surface-container-lowest p-stack-md rounded-[1.5rem] shadow-[0_4px_16px_rgba(0,0,0,0.04)] border border-outline-variant/10">
+<p class="font-label-caps text-label-caps text-on-surface-variant uppercase mb-1">Budget Left</p>
+<div class="flex items-baseline gap-2">
+<span class="font-stat-lg text-stat-lg text-primary">₹5,750</span>
+<span class="font-stat-sm text-stat-sm text-on-surface-variant">14 Days left</span>
+</div>
+<div class="mt-4 h-1 w-full bg-surface-container-high rounded-full overflow-hidden">
+<div class="h-full bg-tertiary-container w-[40%] rounded-full"></div>
+</div>
+</div>
+</section>
+<!-- Responsive Grid for Main Cards -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-stack-lg">
+<!-- Left/Main Column -->
+<div class="md:col-span-8 space-y-stack-lg">
+<!-- Education Context Card -->
+<div class="bg-primary-container text-on-primary-container p-stack-lg rounded-[1.5rem] shadow-lg relative overflow-hidden">
+<div class="relative z-10">
+<div class="flex justify-between items-start mb-4">
+<div>
+<h3 class="font-headline-lg-mobile text-headline-lg-mobile">IIT Delhi</h3>
+<p class="opacity-80 font-body-md text-body-md">Semester 5 • Computer Science</p>
+</div>
+<span class="material-symbols-outlined text-4xl opacity-50">school</span>
+</div>
+<div class="space-y-2">
+<div class="flex justify-between text-sm font-label-caps">
+<span>Academic Progress</span>
+<span>37.5%</span>
+</div>
+<div class="h-3 w-full bg-black/10 rounded-full overflow-hidden">
+<div class="h-full bg-white w-[37.5%] rounded-full shadow-[0_0_8px_rgba(255,255,255,0.5)]"></div>
+</div>
+</div>
+</div>
+<!-- Abstract decoration -->
+<div class="absolute -right-10 -bottom-10 w-40 h-40 bg-white/10 rounded-full blur-3xl"></div>
+</div>
+<!-- Category Breakdown (Asymmetric Layout) -->
+<div class="bg-surface-container-lowest p-stack-lg rounded-[1.5rem] shadow-[0_4px_16px_rgba(0,0,0,0.04)]">
+<h3 class="font-label-caps text-label-caps text-on-surface-variant mb-stack-md uppercase">Category Breakdown</h3>
+<div class="flex flex-col gap-4">
+<!-- Food -->
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-secondary-container/20 flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined">restaurant</span>
+</div>
+<div class="flex-1">
+<div class="flex justify-between mb-1">
+<span class="font-body-md text-body-md font-semibold">Food &amp; Dining</span>
+<span class="font-stat-sm text-stat-sm">37%</span>
+</div>
+<div class="h-2 w-full bg-surface-container-high rounded-full overflow-hidden">
+<div class="h-full bg-secondary-container w-[37%]"></div>
+</div>
+</div>
+</div>
+<!-- Transport -->
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">directions_bus</span>
+</div>
+<div class="flex-1">
+<div class="flex justify-between mb-1">
+<span class="font-body-md text-body-md font-semibold">Transport</span>
+<span class="font-stat-sm text-stat-sm">24%</span>
+</div>
+<div class="h-2 w-full bg-surface-container-high rounded-full overflow-hidden">
+<div class="h-full bg-primary w-[24%]"></div>
+</div>
+</div>
+</div>
+<!-- Entertainment -->
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-tertiary/10 flex items-center justify-center text-tertiary">
+<span class="material-symbols-outlined">movie</span>
+</div>
+<div class="flex-1">
+<div class="flex justify-between mb-1">
+<span class="font-body-md text-body-md font-semibold">Entertainment</span>
+<span class="font-stat-sm text-stat-sm">21%</span>
+</div>
+<div class="h-2 w-full bg-surface-container-high rounded-full overflow-hidden">
+<div class="h-full bg-tertiary w-[21%]"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Recent Transactions -->
+<div class="bg-surface-container-lowest p-stack-lg rounded-[1.5rem] shadow-[0_4px_16px_rgba(0,0,0,0.04)]">
+<div class="flex justify-between items-center mb-stack-md">
+<h3 class="font-label-caps text-label-caps text-on-surface-variant uppercase">Recent Transactions</h3>
+<button class="text-primary font-label-caps text-xs">View All</button>
+</div>
+<div class="space-y-4">
+<div class="flex items-center justify-between p-2 hover:bg-surface-container transition-colors rounded-xl">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-surface-container-high flex items-center justify-center">
+<span class="material-symbols-outlined text-on-surface-variant">shopping_bag</span>
+</div>
+<div>
+<p class="font-body-md text-body-md font-semibold">College Canteen</p>
+<p class="text-xs text-on-surface-variant">Today, 2:15 PM</p>
+</div>
+</div>
+<span class="font-stat-sm text-stat-sm text-error">- ₹120</span>
+</div>
+<div class="flex items-center justify-between p-2 hover:bg-surface-container transition-colors rounded-xl">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-surface-container-high flex items-center justify-center">
+<span class="material-symbols-outlined text-on-surface-variant">tram</span>
+</div>
+<div>
+<p class="font-body-md text-body-md font-semibold">Metro Recharge</p>
+<p class="text-xs text-on-surface-variant">Yesterday</p>
+</div>
+</div>
+<span class="font-stat-sm text-stat-sm text-error">- ₹500</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Column / Sidebar Stats -->
+<div class="md:col-span-4 space-y-stack-lg">
+<!-- Burn Rate Gauge -->
+<div class="bg-surface-container-lowest p-stack-lg rounded-[1.5rem] shadow-[0_4px_16px_rgba(0,0,0,0.04)] border border-error/10">
+<div class="text-center">
+<p class="font-label-caps text-label-caps text-on-surface-variant uppercase mb-4">Daily Burn Rate</p>
+<div class="relative w-32 h-32 mx-auto mb-4">
+<svg class="w-full h-full transform -rotate-90">
+<circle class="text-surface-container-high" cx="64" cy="64" fill="transparent" r="56" stroke="currentColor" stroke-width="8"></circle>
+<circle class="text-error" cx="64" cy="64" fill="transparent" r="56" stroke="currentColor" stroke-dasharray="351.85" stroke-dashoffset="70" stroke-linecap="round" stroke-width="12"></circle>
+</svg>
+<div class="absolute inset-0 flex flex-col items-center justify-center">
+<span class="font-stat-lg text-stat-lg">₹567</span>
+<span class="text-[10px] font-label-caps opacity-60">/DAY</span>
+</div>
+</div>
+<div class="inline-flex items-center gap-1 bg-error/10 text-error px-3 py-1 rounded-full text-xs font-bold">
+<span class="material-symbols-outlined text-sm">warning</span>
+                            HIGH RISK
+                        </div>
+<p class="mt-4 text-xs text-on-surface-variant leading-relaxed">
+                            You're spending 15% more than your suggested daily limit of ₹490.
+                        </p>
+</div>
+</div>
+<!-- AI Insight Card -->
+<div class="bg-primary/5 p-stack-lg rounded-[1.5rem] border border-primary/10 relative overflow-hidden">
+<div class="flex items-center gap-2 mb-3">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">smart_toy</span>
+<span class="font-label-caps text-label-caps text-primary">STRIVE AI</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant italic">
+                        "Hey! I noticed you spend most on Food during weekends. Ordering in groups could save you ~₹800/month."
+                    </p>
+<button class="mt-4 w-full py-3 bg-primary text-white rounded-xl font-semibold shadow-md active:scale-95 transition-all">
+                        Chat with Assistant
+                    </button>
+</div>
+<!-- Quick Actions Bento -->
+<div class="grid grid-cols-2 gap-3">
+<button class="bg-secondary-container text-white p-4 rounded-2xl flex flex-col items-center justify-center gap-2 active:scale-95 transition-all">
+<span class="material-symbols-outlined">add_circle</span>
+<span class="text-[10px] font-bold uppercase">Expense</span>
+</button>
+<button class="bg-surface-container-high text-on-surface p-4 rounded-2xl flex flex-col items-center justify-center gap-2 active:scale-95 transition-all">
+<span class="material-symbols-outlined">receipt_long</span>
+<span class="text-[10px] font-bold uppercase">Scan Bill</span>
+</button>
+</div>
+</div>
+</div>
+</main>
+<!-- FAB (Mobile Only) - Suppressed on sub-pages but relevant here -->
+<button class="md:hidden fixed right-6 bottom-24 w-14 h-14 bg-primary text-white rounded-full shadow-xl flex items-center justify-center z-40 active:scale-90 transition-transform">
+<span class="material-symbols-outlined text-3xl">add</span>
+</button>
+<!-- Bottom Navigation Bar (Mobile Only) -->
+<nav class="md:hidden fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[480px] flex justify-around items-center px-2 py-3 pb-safe bg-surface-container-lowest shadow-lg rounded-t-xl z-50">
+<a class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-full p-2 min-w-[64px] active:scale-90 transition-all duration-200" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">home</span>
+<span class="font-label-caps text-label-caps">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant p-2 hover:bg-primary/5 transition-all duration-200 active:scale-90" href="#">
+<span class="material-symbols-outlined">add_circle</span>
+<span class="font-label-caps text-label-caps">Transact</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant p-2 hover:bg-primary/5 transition-all duration-200 active:scale-90" href="#">
+<span class="material-symbols-outlined">school</span>
+<span class="font-label-caps text-label-caps">Academic</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant p-2 hover:bg-primary/5 transition-all duration-200 active:scale-90" href="#">
+<span class="material-symbols-outlined">forum</span>
+<span class="font-label-caps text-label-caps">Chat</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant p-2 hover:bg-primary/5 transition-all duration-200 active:scale-90" href="#">
+<span class="material-symbols-outlined">menu</span>
+<span class="font-label-caps text-label-caps">More</span>
+</a>
+</nav>
+<script>
+        // Simple micro-interaction for cards
+        document.querySelectorAll('.snap-center').forEach(card => {
+            card.addEventListener('click', () => {
+                card.classList.add('scale-95');
+                setTimeout(() => card.classList.remove('scale-95'), 150);
+            });
+        });
+    </script>
+</body></html>

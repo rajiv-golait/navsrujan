@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Academic Expenses - VAULT</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&amp;family=Geist:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+        .ai-accent-line {
+            position: relative;
+        }
+        .ai-accent-line::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 12px;
+            bottom: 12px;
+            width: 2px;
+            background-color: #4F46E5;
+        }
+        .glass-header {
+            backdrop-filter: blur(12px);
+            background-color: rgba(5, 20, 36, 0.8);
+        }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #0F1115; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container-highest": "#273647",
+                        "surface-bright": "#2c3a4c",
+                        "surface-container-high": "#1c2b3c",
+                        "on-tertiary-fixed-variant": "#3c475a",
+                        "on-primary-fixed": "#1a1c20",
+                        "surface-tint": "#c6c6cc",
+                        "primary-container": "#0f1115",
+                        "on-primary": "#2f3035",
+                        "on-surface-variant": "#c6c6cb",
+                        "tertiary-fixed": "#d8e3fb",
+                        "error-container": "#93000a",
+                        "secondary-container": "#3626ce",
+                        "outline-variant": "#45474b",
+                        "on-tertiary-container": "#727d92",
+                        "on-secondary-fixed": "#0f0069",
+                        "secondary-fixed": "#e2dfff",
+                        "on-secondary-container": "#b3b1ff",
+                        "on-secondary": "#1d00a5",
+                        "tertiary-container": "#061122",
+                        "on-primary-container": "#7b7c82",
+                        "surface-container-lowest": "#010f1f",
+                        "secondary-fixed-dim": "#c3c0ff",
+                        "surface-container": "#122131",
+                        "secondary": "#c3c0ff",
+                        "on-secondary-fixed-variant": "#3323cc",
+                        "inverse-primary": "#5d5e63",
+                        "primary": "#c6c6cc",
+                        "on-tertiary": "#263143",
+                        "surface-container-low": "#0d1c2d",
+                        "surface": "#051424",
+                        "outline": "#909095",
+                        "tertiary": "#bcc7de",
+                        "inverse-surface": "#d4e4fa",
+                        "on-surface": "#d4e4fa",
+                        "primary-fixed": "#e2e2e8",
+                        "on-tertiary-fixed": "#111c2d",
+                        "error": "#ffb4ab",
+                        "on-error-container": "#ffdad6",
+                        "inverse-on-surface": "#233143",
+                        "background": "#051424",
+                        "tertiary-fixed-dim": "#bcc7de",
+                        "surface-variant": "#273647",
+                        "surface-dim": "#051424",
+                        "on-background": "#d4e4fa",
+                        "on-primary-fixed-variant": "#45474b",
+                        "primary-fixed-dim": "#c6c6cc",
+                        "on-error": "#690005"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "stack-lg": "32px",
+                        "gutter": "24px",
+                        "container-max-width": "1280px",
+                        "margin-mobile": "16px",
+                        "stack-sm": "8px",
+                        "margin-desktop": "48px",
+                        "stack-md": "16px",
+                        "base": "8px"
+                    },
+                    "fontFamily": {
+                        "body-sm": ["Manrope"],
+                        "body-md": ["Manrope"],
+                        "headline-xl": ["Manrope"],
+                        "headline-lg-mobile": ["Manrope"],
+                        "label-caps": ["Manrope"],
+                        "headline-lg": ["Manrope"],
+                        "headline-md": ["Manrope"],
+                        "data-mono": ["Geist"],
+                        "body-lg": ["Manrope"]
+                    },
+                    "fontSize": {
+                        "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "headline-xl": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "headline-lg-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "600"}],
+                        "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "data-mono": ["14px", {"lineHeight": "20px", "fontWeight": "500"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface font-body-md selection:bg-secondary selection:text-on-secondary">
+<!-- TopAppBar -->
+<header class="fixed top-0 left-0 w-full z-50 bg-surface/80 backdrop-blur-xl border-b border-outline-variant">
+<div class="flex justify-between items-center h-16 px-gutter w-full max-w-container-max-width mx-auto">
+<div class="flex items-center gap-stack-md">
+<button class="hover:text-secondary transition-colors scale-95 active:opacity-80 transition-all duration-200">
+<span class="material-symbols-outlined text-primary">menu</span>
+</button>
+<h1 class="font-label-caps text-label-caps tracking-[0.2em] text-primary">VAULT</h1>
+</div>
+<div class="flex items-center gap-stack-md">
+<button class="hover:text-secondary transition-colors scale-95 active:opacity-80 transition-all duration-200">
+<span class="material-symbols-outlined text-primary">notifications</span>
+</button>
+<div class="w-8 h-8 rounded-full bg-surface-container-highest border border-outline-variant overflow-hidden">
+<img alt="User Profile" class="w-full h-full object-cover" data-alt="A professional portrait of a university student against a dark, minimalist architectural background. The person has a serious, focused expression, lit with soft high-key lighting that emphasizes a modern, intellectual aesthetic. The color palette is composed of deep charcoals and muted slate blues, matching a premium academic financial application interface." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBT5clMYt9Taeu_gRVQXuAhqmR-H__6V9ZIVzwdS7S8Ke0_Of7DWqrYmWBmCRN93v9kmLgJbmfoG8dvhYURN51QP03-ubGv6JRIM7wQrUcSncWNQ7uzUHtAROM22vNr3drmHeg_nhjPAJCHpl8ktf5tnnnY2qG94m88VpZYEbcJ8mS0OsK2Nh17CyKZ2p8Wxq7fyFDwb23WExPhxPZ1fQKXAERJraBFM46TF9UJ0uxaQtNaRkylkOeHu-nwW8yAF6oihrP3R3BEZux1"/>
+</div>
+</div>
+</div>
+</header>
+<main class="pt-24 pb-32 px-margin-mobile md:px-margin-desktop max-w-container-max-width mx-auto">
+<!-- Bento Grid Layout -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-gutter">
+<!-- Semester Goal Summary (Progress Chart) -->
+<section class="md:col-span-7 lg:col-span-8 bg-surface-container border border-outline-variant rounded-xl p-gutter overflow-hidden relative">
+<div class="flex flex-col md:flex-row items-center justify-between gap-stack-lg">
+<div class="flex-1">
+<span class="font-label-caps text-label-caps text-outline uppercase">Academic Period</span>
+<h2 class="font-headline-md text-headline-md mt-2 text-primary">Semester Goal Summary</h2>
+<div class="mt-stack-lg space-y-stack-sm">
+<div class="flex justify-between items-end">
+<span class="font-body-sm text-outline">Current Spend</span>
+<span class="font-data-mono text-data-mono text-on-surface">$15,240.00</span>
+</div>
+<div class="flex justify-between items-end">
+<span class="font-body-sm text-outline">Total Budget</span>
+<span class="font-data-mono text-data-mono text-on-surface">$20,000.00</span>
+</div>
+</div>
+<button class="mt-stack-lg bg-[#4F46E5] text-white px-stack-lg py-stack-md rounded-lg font-label-caps text-label-caps hover:opacity-90 transition-opacity">
+                            ADJUST BUDGET
+                        </button>
+</div>
+<!-- Professional Circular Progress -->
+<div class="relative w-48 h-48 flex items-center justify-center">
+<svg class="w-full h-full -rotate-90">
+<circle class="text-surface-container-highest" cx="96" cy="96" fill="transparent" r="88" stroke="currentColor" stroke-width="8"></circle>
+<circle class="text-[#4F46E5]" cx="96" cy="96" fill="transparent" r="88" stroke="currentColor" stroke-dasharray="552.92" stroke-dashoffset="131.6" stroke-linecap="round" stroke-width="8"></circle>
+</svg>
+<div class="absolute flex flex-col items-center">
+<span class="font-headline-md text-headline-md text-primary">76.2%</span>
+<span class="font-label-caps text-label-caps text-outline">UTILIZED</span>
+</div>
+</div>
+</div>
+<!-- Decorative subtle background pattern -->
+<div class="absolute -bottom-8 -right-8 opacity-5 pointer-events-none">
+<span class="material-symbols-outlined text-[120px]">account_balance</span>
+</div>
+</section>
+<!-- AI Insight Card -->
+<section class="md:col-span-5 lg:col-span-4 bg-primary-container border border-outline-variant rounded-xl p-gutter ai-accent-line flex flex-col justify-between">
+<div>
+<div class="flex items-center gap-stack-sm mb-stack-md">
+<span class="material-symbols-outlined text-secondary text-base">auto_awesome</span>
+<span class="font-label-caps text-label-caps text-secondary">INTELLIGENCE INSIGHT</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-surface mb-stack-sm">Missing Expenses</h3>
+<p class="font-body-md text-outline">Based on your Architecture curriculum and historical patterns, we've identified potential overlooked costs.</p>
+</div>
+<div class="mt-stack-lg space-y-stack-sm">
+<div class="p-stack-md bg-surface-container-low rounded border border-outline-variant/30 flex items-center justify-between">
+<div class="flex items-center gap-stack-sm">
+<span class="material-symbols-outlined text-outline">library_books</span>
+<span class="font-body-sm">Library Fines</span>
+</div>
+<span class="font-data-mono text-secondary">+$85.00</span>
+</div>
+<div class="p-stack-md bg-surface-container-low rounded border border-outline-variant/30 flex items-center justify-between">
+<div class="flex items-center gap-stack-sm">
+<span class="material-symbols-outlined text-outline">print</span>
+<span class="font-body-sm">Photocopy Costs</span>
+</div>
+<span class="font-data-mono text-secondary">+$120.00</span>
+</div>
+</div>
+<div class="mt-stack-lg">
+<button class="w-full py-stack-sm border border-outline-variant text-primary rounded font-label-caps text-label-caps hover:bg-surface-container transition-colors">
+                        ADD TO BUDGET
+                    </button>
+</div>
+</section>
+<!-- Upcoming Fees -->
+<section class="md:col-span-6 bg-surface-container border border-outline-variant rounded-xl p-gutter">
+<div class="flex justify-between items-center mb-stack-lg">
+<h3 class="font-headline-md text-headline-md text-primary">Upcoming Fees</h3>
+<span class="material-symbols-outlined text-outline">calendar_today</span>
+</div>
+<div class="space-y-stack-md">
+<div class="group flex items-center justify-between p-stack-md bg-surface-container-high rounded-lg hover:border-secondary transition-all cursor-pointer border border-transparent">
+<div class="flex gap-stack-md items-center">
+<div class="w-12 h-12 rounded bg-surface-container-highest flex items-center justify-center">
+<span class="material-symbols-outlined text-secondary">assignment</span>
+</div>
+<div>
+<h4 class="font-body-md text-on-surface">Semester Exam Fees</h4>
+<p class="font-body-sm text-outline">Due: Oct 24, 2024</p>
+</div>
+</div>
+<div class="text-right">
+<p class="font-data-mono text-primary">$2,500.00</p>
+<span class="text-[10px] font-label-caps text-[#4F46E5] px-2 py-0.5 bg-[#4F46E5]/10 rounded-full">PRIORITY</span>
+</div>
+</div>
+<div class="group flex items-center justify-between p-stack-md bg-surface-container-high rounded-lg hover:border-secondary transition-all cursor-pointer border border-transparent">
+<div class="flex gap-stack-md items-center">
+<div class="w-12 h-12 rounded bg-surface-container-highest flex items-center justify-center">
+<span class="material-symbols-outlined text-secondary">biotech</span>
+</div>
+<div>
+<h4 class="font-body-md text-on-surface">Lab Equipment Kit</h4>
+<p class="font-body-sm text-outline">Due: Nov 02, 2024</p>
+</div>
+</div>
+<div class="text-right">
+<p class="font-data-mono text-primary">$4,200.00</p>
+<span class="text-[10px] font-label-caps text-outline px-2 py-0.5 bg-outline-variant/20 rounded-full">STANDARD</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Recent Academic Spends -->
+<section class="md:col-span-6 bg-surface-container border border-outline-variant rounded-xl p-gutter">
+<div class="flex justify-between items-center mb-stack-lg">
+<h3 class="font-headline-md text-headline-md text-primary">Recent Academic Spends</h3>
+<button class="font-label-caps text-label-caps text-secondary hover:underline">VIEW ALL</button>
+</div>
+<div class="divide-y divide-outline-variant/30">
+<div class="py-stack-md flex items-center justify-between">
+<div class="flex items-center gap-stack-md">
+<span class="material-symbols-outlined text-outline">menu_book</span>
+<span class="font-body-md">Modern Architecture Vol 1</span>
+</div>
+<span class="font-data-mono text-on-surface">-$145.00</span>
+</div>
+<div class="py-stack-md flex items-center justify-between">
+<div class="flex items-center gap-stack-md">
+<span class="material-symbols-outlined text-outline">wifi</span>
+<span class="font-body-md">Annual Wi-Fi Renewal</span>
+</div>
+<span class="font-data-mono text-on-surface">-$890.00</span>
+</div>
+<div class="py-stack-md flex items-center justify-between">
+<div class="flex items-center gap-stack-md">
+<span class="material-symbols-outlined text-outline">restaurant</span>
+<span class="font-body-md">Canteen Refuel</span>
+</div>
+<span class="font-data-mono text-on-surface">-$12.40</span>
+</div>
+</div>
+</section>
+<!-- Contextual Card: Savings Opportunities -->
+<section class="md:col-span-12 bg-surface-container-low border border-outline-variant rounded-xl p-gutter overflow-hidden relative group">
+<div class="flex flex-col md:flex-row gap-gutter items-center relative z-10">
+<div class="w-full md:w-1/3">
+<img alt="Campus Library" class="w-full h-40 object-cover rounded border border-outline-variant grayscale hover:grayscale-0 transition-all duration-500" data-alt="A wide-angle interior shot of a contemporary university library with high ceilings, large glass windows, and rows of sleek, dark wood study pods. The lighting is calm and scholarly, featuring a mix of natural twilight and warm desk lamps. The aesthetic is extremely clean and high-fidelity, following the Obsidian Intelligence theme with a focus on deep shadows and sharp architectural lines." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDp6FFKDSWj5Z4XFVqzPO09dEQm42JTdsw-mRhbME2oDAdKWLMyYe-sBD2gSt5StM5b4erl6-6XUk1--_oQYkHnEx8tI5flHLtF3ELrvVXBtf8IANj4Kt928Mmo6VdYHXWsLUXB-asSvz153whafvFdSCEIyZ2kIXBGkAsa7rS2EswwwcL1n4e-4cuP5ilbD6gxPPWh3eNo--_hipCtZiSQTtrx1CEhZ0ZDygEoYzE6qBUFrVaD17RjVmtHy19z1BxZ_nIYB5zp0y67"/>
+</div>
+<div class="flex-1">
+<h3 class="font-headline-md text-headline-md text-primary mb-2">Student Grant Eligibility</h3>
+<p class="font-body-md text-outline">Your academic performance in Architecture Studio puts you in the top 5% of your class. You may be eligible for the 'Excellence in Design' grant which covers up to 40% of Lab Equipment costs.</p>
+<div class="mt-stack-md flex gap-stack-md">
+<button class="bg-[#4F46E5] text-white px-stack-lg py-stack-sm rounded font-label-caps text-label-caps">APPLY NOW</button>
+<button class="text-primary px-stack-lg py-stack-sm rounded font-label-caps text-label-caps border border-outline-variant">DISMISS</button>
+</div>
+</div>
+</div>
+<!-- Glassy overlay effect -->
+<div class="absolute inset-0 bg-gradient-to-r from-transparent via-surface-container-high/20 to-transparent pointer-events-none group-hover:translate-x-full transition-transform duration-1000"></div>
+</section>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 bg-surface/80 backdrop-blur-xl border-t border-outline-variant">
+<div class="flex justify-around items-center h-20 pb-safe px-margin-mobile max-w-container-max-width mx-auto">
+<a class="flex flex-col items-center justify-center text-outline transition-colors hover:text-primary" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-label-caps text-label-caps mt-1">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-secondary font-bold scale-110 transition-transform duration-300 ease-out" href="#">
+<span class="material-symbols-outlined">swap_horiz</span>
+<span class="font-label-caps text-label-caps mt-1">Transact</span>
+</a>
+<a class="flex flex-col items-center justify-center text-outline transition-colors hover:text-primary" href="#">
+<span class="material-symbols-outlined">forum</span>
+<span class="font-label-caps text-label-caps mt-1">Chat</span>
+</a>
+<a class="flex flex-col items-center justify-center text-outline transition-colors hover:text-primary" href="#">
+<span class="material-symbols-outlined">school</span>
+<span class="font-label-caps text-label-caps mt-1">Campus</span>
+</a>
+<a class="flex flex-col items-center justify-center text-outline transition-colors hover:text-primary" href="#">
+<span class="material-symbols-outlined">account_balance_wallet</span>
+<span class="font-label-caps text-label-caps mt-1">Plans</span>
+</a>
+</div>
+</nav>
+<script>
+        // Micro-interaction for cards
+        document.querySelectorAll('section').forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.style.transform = 'translateY(-2px)';
+                card.style.transition = 'transform 0.3s ease-out';
+            });
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'translateY(0)';
+            });
+        });
+    </script>
+</body></html>

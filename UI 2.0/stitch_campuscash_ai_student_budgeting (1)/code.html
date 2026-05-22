@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Vault - Transactions</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&amp;family=Geist:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container-highest": "#273647",
+                        "surface-bright": "#2c3a4c",
+                        "surface-container-high": "#1c2b3c",
+                        "on-tertiary-fixed-variant": "#3c475a",
+                        "on-primary-fixed": "#1a1c20",
+                        "surface-tint": "#c6c6cc",
+                        "primary-container": "#0f1115",
+                        "on-primary": "#2f3035",
+                        "on-surface-variant": "#c6c6cb",
+                        "tertiary-fixed": "#d8e3fb",
+                        "error-container": "#93000a",
+                        "secondary-container": "#3626ce",
+                        "outline-variant": "#45474b",
+                        "on-tertiary-container": "#727d92",
+                        "on-secondary-fixed": "#0f0069",
+                        "secondary-fixed": "#e2dfff",
+                        "on-secondary-container": "#b3b1ff",
+                        "on-secondary": "#1d00a5",
+                        "tertiary-container": "#061122",
+                        "on-primary-container": "#7b7c82",
+                        "surface-container-lowest": "#010f1f",
+                        "secondary-fixed-dim": "#c3c0ff",
+                        "surface-container": "#122131",
+                        "secondary": "#c3c0ff",
+                        "on-secondary-fixed-variant": "#3323cc",
+                        "inverse-primary": "#5d5e63",
+                        "primary": "#c6c6cc",
+                        "on-tertiary": "#263143",
+                        "surface-container-low": "#0d1c2d",
+                        "surface": "#051424",
+                        "outline": "#909095",
+                        "tertiary": "#bcc7de",
+                        "inverse-surface": "#d4e4fa",
+                        "on-surface": "#d4e4fa",
+                        "primary-fixed": "#e2e2e8",
+                        "on-tertiary-fixed": "#111c2d",
+                        "error": "#ffb4ab",
+                        "on-error-container": "#ffdad6",
+                        "inverse-on-surface": "#233143",
+                        "background": "#051424",
+                        "tertiary-fixed-dim": "#bcc7de",
+                        "surface-variant": "#273647",
+                        "surface-dim": "#051424",
+                        "on-background": "#d4e4fa",
+                        "on-primary-fixed-variant": "#45474b",
+                        "primary-fixed-dim": "#c6c6cc",
+                        "on-error": "#690005"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "stack-lg": "32px",
+                        "gutter": "24px",
+                        "container-max-width": "1280px",
+                        "margin-mobile": "16px",
+                        "stack-sm": "8px",
+                        "margin-desktop": "48px",
+                        "stack-md": "16px",
+                        "base": "8px"
+                    },
+                    "fontFamily": {
+                        "body-sm": ["Manrope"],
+                        "body-md": ["Manrope"],
+                        "headline-xl": ["Manrope"],
+                        "headline-lg-mobile": ["Manrope"],
+                        "label-caps": ["Manrope"],
+                        "headline-lg": ["Manrope"],
+                        "headline-md": ["Manrope"],
+                        "data-mono": ["Geist"],
+                        "body-lg": ["Manrope"]
+                    },
+                    "fontSize": {
+                        "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "headline-xl": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "headline-lg-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "600"}],
+                        "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "data-mono": ["14px", {"lineHeight": "20px", "fontWeight": "500"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            background-color: #051424;
+            color: #d4e4fa;
+            font-family: 'Manrope', sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+        .ai-sparkle-gradient {
+            background: linear-gradient(135deg, #4F46E5 0%, #C3C0FF 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #0F1115;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 2px;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="custom-scrollbar">
+<!-- TopAppBar -->
+<header class="fixed top-0 left-0 w-full z-50 bg-surface border-b border-outline-variant">
+<div class="flex justify-between items-center h-16 px-gutter w-full max-w-container-max-width mx-auto">
+<button class="text-primary hover:text-secondary transition-colors scale-95 active:opacity-80">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<h1 class="font-label-caps text-label-caps tracking-[0.2em] text-primary">VAULT</h1>
+<button class="text-primary hover:text-secondary transition-colors scale-95 active:opacity-80">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+</div>
+</header>
+<main class="pt-24 pb-32 px-margin-mobile md:px-margin-desktop max-w-container-max-width mx-auto">
+<!-- NLP Input Section -->
+<section class="mb-stack-lg">
+<div class="relative group">
+<div class="absolute inset-y-0 left-4 flex items-center pointer-events-none">
+<span class="material-symbols-outlined ai-sparkle-gradient text-[20px]" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+</div>
+<input class="w-full h-14 bg-primary-container border border-outline-variant rounded-lg pl-12 pr-4 text-body-md text-on-surface focus:border-secondary-container focus:ring-2 focus:ring-secondary-container/20 transition-all placeholder:text-outline/50 outline-none" placeholder="Paid $250 for dinner at The Grill..." type="text"/>
+<div class="absolute inset-y-0 right-4 flex items-center">
+<span class="text-label-caps text-outline bg-surface-container-high px-2 py-1 rounded">ENTER</span>
+</div>
+</div>
+<p class="mt-stack-sm text-label-caps text-outline-variant">AI-POWERED TRANSACTION ENTRY</p>
+</section>
+<!-- Bento Grid for Budget & Analytics -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-gutter mb-stack-lg">
+<!-- Budget Summary Card -->
+<div class="lg:col-span-2 p-gutter bg-surface-container border border-outline-variant rounded-xl flex flex-col justify-between overflow-hidden relative">
+<div class="absolute top-0 right-0 w-64 h-64 bg-secondary/5 rounded-full blur-[100px] -mr-32 -mt-32"></div>
+<div class="relative z-10">
+<div class="flex justify-between items-start mb-stack-md">
+<div>
+<h2 class="font-label-caps text-label-caps text-outline mb-1 uppercase">Monthly Budget</h2>
+<p class="font-headline-md text-headline-md text-on-surface">$12,450 <span class="text-body-md text-outline">/ $20,000</span></p>
+</div>
+<div class="text-right">
+<span class="font-data-mono text-data-mono text-secondary">62.2%</span>
+</div>
+</div>
+<div class="w-full h-3 bg-surface-container-highest rounded-full overflow-hidden mb-stack-sm">
+<div class="h-full bg-secondary-container rounded-full" style="width: 62.2%;"></div>
+</div>
+<div class="flex justify-between items-center text-label-caps text-outline-variant">
+<span>SPENT THIS MONTH</span>
+<span>$7,550 REMAINING</span>
+</div>
+</div>
+</div>
+<!-- Mini Insight Card -->
+<div class="p-gutter bg-surface-container border border-outline-variant rounded-xl flex flex-col justify-center items-center text-center">
+<div class="mb-stack-sm text-secondary-container">
+<span class="material-symbols-outlined text-[32px]">trending_up</span>
+</div>
+<h3 class="font-label-caps text-label-caps text-outline uppercase mb-2">Spending Insight</h3>
+<p class="font-body-md text-body-md text-on-surface">You spent 12% less on <span class="text-secondary font-bold">Dining</span> this week.</p>
+</div>
+</div>
+<!-- Transaction List -->
+<section class="space-y-stack-lg">
+<!-- Group: Today -->
+<div>
+<div class="flex items-center gap-4 mb-stack-md">
+<h3 class="font-label-caps text-label-caps text-secondary tracking-widest uppercase">Today</h3>
+<div class="h-[1px] flex-grow bg-outline-variant/30"></div>
+</div>
+<div class="space-y-stack-sm">
+<!-- Item 1 -->
+<div class="group flex items-center justify-between p-4 bg-surface-container-low border border-outline-variant/50 rounded-lg hover:bg-surface-container transition-colors cursor-pointer">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-lg bg-surface-container-highest flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined">local_pizza</span>
+</div>
+<div>
+<h4 class="font-body-md text-body-md text-on-surface font-semibold">Pizza Hut</h4>
+<p class="font-label-caps text-[10px] text-outline uppercase">Dining • 12:45 PM</p>
+</div>
+</div>
+<div class="text-right">
+<p class="font-data-mono text-data-mono text-on-surface">-$250.00</p>
+<p class="font-label-caps text-[10px] text-outline-variant uppercase">VISA ****4242</p>
+</div>
+</div>
+<!-- Item 2 -->
+<div class="group flex items-center justify-between p-4 bg-surface-container-low border border-outline-variant/50 rounded-lg hover:bg-surface-container transition-colors cursor-pointer">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-lg bg-surface-container-highest flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined">directions_car</span>
+</div>
+<div>
+<h4 class="font-body-md text-body-md text-on-surface font-semibold">Uber</h4>
+<p class="font-label-caps text-[10px] text-outline uppercase">Transport • 09:12 AM</p>
+</div>
+</div>
+<div class="text-right">
+<p class="font-data-mono text-data-mono text-on-surface">-$180.50</p>
+<p class="font-label-caps text-[10px] text-outline-variant uppercase">APPLE PAY</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Group: Yesterday -->
+<div>
+<div class="flex items-center gap-4 mb-stack-md">
+<h3 class="font-label-caps text-label-caps text-outline tracking-widest uppercase">Yesterday</h3>
+<div class="h-[1px] flex-grow bg-outline-variant/30"></div>
+</div>
+<div class="space-y-stack-sm">
+<!-- Item 3 -->
+<div class="group flex items-center justify-between p-4 bg-surface-container-low border border-outline-variant/50 rounded-lg hover:bg-surface-container transition-colors cursor-pointer">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-lg bg-surface-container-highest flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined">shopping_cart</span>
+</div>
+<div>
+<h4 class="font-body-md text-body-md text-on-surface font-semibold">Amazon</h4>
+<p class="font-label-caps text-[10px] text-outline uppercase">Shopping • Oct 24, 6:30 PM</p>
+</div>
+</div>
+<div class="text-right">
+<p class="font-data-mono text-data-mono text-on-surface">-$1,240.00</p>
+<p class="font-label-caps text-[10px] text-outline-variant uppercase">AMEX ****9001</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Visualization Placeholder Section -->
+<section class="mt-stack-lg p-gutter bg-surface-container border border-outline-variant rounded-xl overflow-hidden relative min-h-[300px] flex flex-col">
+<h3 class="font-label-caps text-label-caps text-outline mb-gutter uppercase">Cash Flow Analysis</h3>
+<div class="flex-grow flex items-end gap-2">
+<!-- Simple representative bar chart -->
+<div class="flex-grow bg-secondary-container/20 h-[40%] rounded-t-sm relative group">
+<div class="absolute inset-0 bg-secondary-container/40 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+</div>
+<div class="flex-grow bg-secondary-container/20 h-[60%] rounded-t-sm relative group">
+<div class="absolute inset-0 bg-secondary-container/40 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+</div>
+<div class="flex-grow bg-secondary-container/40 h-[85%] rounded-t-sm relative group">
+<div class="absolute inset-0 bg-secondary-container/60 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+</div>
+<div class="flex-grow bg-secondary-container/20 h-[45%] rounded-t-sm relative group">
+<div class="absolute inset-0 bg-secondary-container/40 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+</div>
+<div class="flex-grow bg-secondary-container/20 h-[30%] rounded-t-sm relative group">
+<div class="absolute inset-0 bg-secondary-container/40 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+</div>
+<div class="flex-grow bg-secondary-container/60 h-[95%] rounded-t-sm relative group">
+<div class="absolute inset-0 bg-secondary-container/80 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+</div>
+<div class="flex-grow bg-secondary-container/20 h-[50%] rounded-t-sm relative group">
+<div class="absolute inset-0 bg-secondary-container/40 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+</div>
+</div>
+<div class="flex justify-between mt-4 text-[10px] font-label-caps text-outline-variant">
+<span>MON</span><span>TUE</span><span>WED</span><span>THU</span><span>FRI</span><span>SAT</span><span>SUN</span>
+</div>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 bg-surface/80 backdrop-blur-xl border-t border-outline-variant h-20 pb-safe px-margin-mobile flex justify-around items-center">
+<a class="flex flex-col items-center justify-center text-outline transition-colors hover:text-primary" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-label-caps text-label-caps mt-1">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-secondary font-bold scale-110 transition-transform duration-300 ease-out" href="#">
+<span class="material-symbols-outlined" data-icon="swap_horiz" style="font-variation-settings: 'FILL' 1;">swap_horiz</span>
+<span class="font-label-caps text-label-caps mt-1">Transact</span>
+</a>
+<a class="flex flex-col items-center justify-center text-outline transition-colors hover:text-primary" href="#">
+<span class="material-symbols-outlined" data-icon="forum">forum</span>
+<span class="font-label-caps text-label-caps mt-1">Chat</span>
+</a>
+<a class="flex flex-col items-center justify-center text-outline transition-colors hover:text-primary" href="#">
+<span class="material-symbols-outlined" data-icon="school">school</span>
+<span class="font-label-caps text-label-caps mt-1">Campus</span>
+</a>
+<a class="flex flex-col items-center justify-center text-outline transition-colors hover:text-primary" href="#">
+<span class="material-symbols-outlined" data-icon="account_balance_wallet">account_balance_wallet</span>
+<span class="font-label-caps text-label-caps mt-1">Plans</span>
+</a>
+</nav>
+<script>
+        // Micro-interactions for the input field
+        const nlpInput = document.querySelector('input[type="text"]');
+        const sparkles = document.querySelector('.ai-sparkle-gradient');
+
+        nlpInput.addEventListener('focus', () => {
+            sparkles.style.transform = 'scale(1.2) rotate(15deg)';
+            sparkles.style.transition = 'all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+        });
+
+        nlpInput.addEventListener('blur', () => {
+            sparkles.style.transform = 'scale(1) rotate(0deg)';
+        });
+
+        // Simple parallax effect on cards
+        document.addEventListener('mousemove', (e) => {
+            const cards = document.querySelectorAll('.bg-surface-container');
+            const mouseX = e.clientX / window.innerWidth;
+            const mouseY = e.clientY / window.innerHeight;
+
+            cards.forEach(card => {
+                const rect = card.getBoundingClientRect();
+                const cardX = (rect.left + rect.width / 2) / window.innerWidth;
+                const cardY = (rect.top + rect.height / 2) / window.innerHeight;
+
+                const moveX = (mouseX - cardX) * 10;
+                const moveY = (mouseY - cardY) * 10;
+
+                // Subtle shift for depth
+                const glow = card.querySelector('.blur-\\[100px\\]');
+                if (glow) {
+                    glow.style.transform = `translate(${moveX * 2}px, ${moveY * 2}px)`;
+                }
+            });
+        });
+    </script>
+</body></html>

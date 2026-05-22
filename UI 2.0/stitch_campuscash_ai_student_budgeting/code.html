@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Vault AI Advisor</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;family=Geist:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        body {
+            background-color: #051424;
+            color: #d4e4fa;
+            font-family: 'Manrope', sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+        .ai-accent-line {
+            position: relative;
+        }
+        .ai-accent-line::before {
+            content: '';
+            position: absolute;
+            left: -12px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background-color: #4F46E5;
+            border-radius: 2px;
+        }
+        .glass-panel {
+            backdrop-filter: blur(12px);
+            background: rgba(30, 41, 59, 0.7);
+        }
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #051424;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #273647;
+            border-radius: 10px;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                "surface-container-highest": "#273647",
+                "surface-bright": "#2c3a4c",
+                "surface-container-high": "#1c2b3c",
+                "on-tertiary-fixed-variant": "#3c475a",
+                "on-primary-fixed": "#1a1c20",
+                "surface-tint": "#c6c6cc",
+                "primary-container": "#0f1115",
+                "on-primary": "#2f3035",
+                "on-surface-variant": "#c6c6cb",
+                "tertiary-fixed": "#d8e3fb",
+                "error-container": "#93000a",
+                "secondary-container": "#3626ce",
+                "outline-variant": "#45474b",
+                "on-tertiary-container": "#727d92",
+                "on-secondary-fixed": "#0f0069",
+                "secondary-fixed": "#e2dfff",
+                "on-secondary-container": "#b3b1ff",
+                "on-secondary": "#1d00a5",
+                "tertiary-container": "#061122",
+                "on-primary-container": "#7b7c82",
+                "surface-container-lowest": "#010f1f",
+                "secondary-fixed-dim": "#c3c0ff",
+                "surface-container": "#122131",
+                "secondary": "#c3c0ff",
+                "on-secondary-fixed-variant": "#3323cc",
+                "inverse-primary": "#5d5e63",
+                "primary": "#c6c6cc",
+                "on-tertiary": "#263143",
+                "surface-container-low": "#0d1c2d",
+                "surface": "#051424",
+                "outline": "#909095",
+                "tertiary": "#bcc7de",
+                "inverse-surface": "#d4e4fa",
+                "on-surface": "#d4e4fa",
+                "primary-fixed": "#e2e2e8",
+                "on-tertiary-fixed": "#111c2d",
+                "error": "#ffb4ab",
+                "on-error-container": "#ffdad6",
+                "inverse-on-surface": "#233143",
+                "background": "#051424",
+                "tertiary-fixed-dim": "#bcc7de",
+                "surface-variant": "#273647",
+                "surface-dim": "#051424",
+                "on-background": "#d4e4fa",
+                "on-primary-fixed-variant": "#45474b",
+                "primary-fixed-dim": "#c6c6cc",
+                "on-error": "#690005"
+              },
+              "borderRadius": {
+                "DEFAULT": "0.125rem",
+                "lg": "0.25rem",
+                "xl": "0.5rem",
+                "full": "0.75rem"
+              },
+              "spacing": {
+                "stack-lg": "32px",
+                "gutter": "24px",
+                "container-max-width": "1280px",
+                "margin-mobile": "16px",
+                "stack-sm": "8px",
+                "margin-desktop": "48px",
+                "stack-md": "16px",
+                "base": "8px"
+              },
+              "fontFamily": {
+                "body-sm": ["Manrope"],
+                "body-md": ["Manrope"],
+                "headline-xl": ["Manrope"],
+                "headline-lg-mobile": ["Manrope"],
+                "label-caps": ["Manrope"],
+                "headline-lg": ["Manrope"],
+                "headline-md": ["Manrope"],
+                "data-mono": ["Geist"],
+                "body-lg": ["Manrope"]
+              },
+              "fontSize": {
+                "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                "headline-xl": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                "headline-lg-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "600"}],
+                "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                "data-mono": ["14px", {"lineHeight": "20px", "fontWeight": "500"}],
+                "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}]
+              }
+            }
+          }
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="flex flex-col min-h-screen">
+<!-- Top Navigation -->
+<header class="bg-surface dark:bg-surface border-b border-outline-variant dark:border-on-tertiary-fixed-variant fixed top-0 w-full z-50">
+<div class="flex justify-between items-center h-16 px-gutter w-full max-w-container-max-width mx-auto">
+<div class="flex items-center gap-4">
+<button class="scale-95 active:opacity-80 transition-all duration-200 text-primary dark:text-primary-fixed-dim">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<h1 class="font-label-caps text-label-caps tracking-[0.2em] text-primary dark:text-primary-fixed-dim">VAULT</h1>
+</div>
+<div class="flex items-center gap-6">
+<div class="hidden md:flex gap-8">
+<a class="font-label-caps text-label-caps text-outline dark:text-outline-variant hover:text-primary transition-colors" href="#">DASHBOARD</a>
+<a class="font-label-caps text-label-caps text-primary dark:text-primary-fixed-dim" href="#">ADVISOR</a>
+<a class="font-label-caps text-label-caps text-outline dark:text-outline-variant hover:text-primary transition-colors" href="#">MARKETS</a>
+</div>
+<button class="scale-95 active:opacity-80 transition-all duration-200 text-primary dark:text-primary-fixed-dim">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+</div>
+</div>
+</header>
+<!-- Main Chat Canvas -->
+<main class="flex-1 mt-16 pb-32 overflow-y-auto">
+<div class="max-w-3xl mx-auto px-margin-mobile md:px-gutter pt-12 space-y-12">
+<!-- System Timestamp -->
+<div class="flex justify-center">
+<span class="font-label-caps text-label-caps text-on-tertiary-container uppercase tracking-widest">Today, October 24</span>
+</div>
+<!-- User Message Cluster -->
+<div class="flex flex-col items-end gap-2">
+<div class="bg-surface-container-high border border-outline-variant p-stack-md rounded-xl max-w-[85%]">
+<p class="font-body-md text-body-md text-on-surface">Where am I overspending this month?</p>
+</div>
+<span class="font-label-caps text-label-caps text-outline-variant pr-2">10:42 AM</span>
+</div>
+<!-- AI Response Cluster -->
+<div class="flex flex-col items-start gap-6">
+<div class="ai-accent-line ml-3">
+<div class="space-y-6">
+<!-- Message Text -->
+<div class="bg-primary-container p-stack-md rounded-xl max-w-[90%] md:max-w-[80%] border border-surface-container-highest">
+<p class="font-body-md text-body-md text-primary leading-relaxed">
+                                I've analyzed your recent activity. You're currently <span class="text-error font-semibold">$142 over</span> your typical dining budget, but <span class="text-secondary font-semibold">$50 under</span> on transport.
+                            </p>
+</div>
+<!-- Integrated Analytics Card -->
+<div class="w-full max-w-md bg-surface-container border border-outline-variant p-gutter rounded-xl shadow-2xl">
+<div class="flex justify-between items-center mb-6">
+<h3 class="font-label-caps text-label-caps text-on-tertiary-container uppercase tracking-wider">Spending Overages</h3>
+<span class="material-symbols-outlined text-outline">analytics</span>
+</div>
+<div class="space-y-8">
+<!-- Dining Bar -->
+<div class="space-y-3">
+<div class="flex justify-between items-end">
+<span class="font-headline-md text-headline-md text-on-surface">Dining</span>
+<span class="font-data-mono text-data-mono text-error">+$142.00</span>
+</div>
+<div class="h-1.5 w-full bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-error rounded-full" style="width: 85%;"></div>
+</div>
+<div class="flex justify-between font-label-caps text-[10px] text-outline-variant">
+<span>BUDGET: $600.00</span>
+<span>ACTUAL: $742.00</span>
+</div>
+</div>
+<!-- Entertainment Bar -->
+<div class="space-y-3">
+<div class="flex justify-between items-end">
+<span class="font-headline-md text-headline-md text-on-surface">Entertainment</span>
+<span class="font-data-mono text-data-mono text-on-surface-variant">+$28.50</span>
+</div>
+<div class="h-1.5 w-full bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-primary rounded-full" style="width: 55%;"></div>
+</div>
+<div class="flex justify-between font-label-caps text-[10px] text-outline-variant">
+<span>BUDGET: $300.00</span>
+<span>ACTUAL: $328.50</span>
+</div>
+</div>
+</div>
+<!-- Insight Footer -->
+<div class="mt-8 pt-6 border-t border-outline-variant/30">
+<p class="font-body-sm text-body-sm text-on-tertiary-container italic">
+                                    "Your recent visit to 'The Obsidian Room' accounted for 40% of the dining overage."
+                                </p>
+</div>
+</div>
+</div>
+</div>
+<div class="flex gap-4 ml-3">
+<button class="flex items-center gap-2 font-label-caps text-label-caps text-outline hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-[18px]">refresh</span>
+                        RECALCULATE
+                    </button>
+<button class="flex items-center gap-2 font-label-caps text-label-caps text-outline hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-[18px]">share</span>
+                        EXPORT REPORT
+                    </button>
+</div>
+</div>
+<!-- Future Potential Suggestion -->
+<div class="flex flex-wrap gap-3 pt-4">
+<button class="px-4 py-2 rounded-full border border-outline-variant bg-surface-container-low font-body-sm text-body-sm text-on-surface hover:bg-surface-container transition-colors">
+                    How can I fix this?
+                </button>
+<button class="px-4 py-2 rounded-full border border-outline-variant bg-surface-container-low font-body-sm text-body-sm text-on-surface hover:bg-surface-container transition-colors">
+                    Compare to last month
+                </button>
+<button class="px-4 py-2 rounded-full border border-outline-variant bg-surface-container-low font-body-sm text-body-sm text-on-surface hover:bg-surface-container transition-colors">
+                    Show upcoming bills
+                </button>
+</div>
+</div>
+</main>
+<!-- Bottom Input Bar Area -->
+<div class="fixed bottom-0 left-0 w-full glass-panel border-t border-outline-variant/20 pt-gutter pb-8 px-margin-mobile md:px-gutter z-50">
+<div class="max-w-3xl mx-auto relative group">
+<input class="w-full h-14 pl-6 pr-24 bg-primary-container border border-outline-variant rounded-xl font-body-md text-body-md text-on-surface focus:ring-2 focus:ring-secondary/20 focus:border-secondary transition-all outline-none" placeholder="Ask Vault anything..." type="text"/>
+<div class="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-2">
+<button class="p-2 text-outline hover:text-primary transition-colors">
+<span class="material-symbols-outlined">mic</span>
+</button>
+<button class="h-10 w-10 flex items-center justify-center bg-[#4F46E5] text-white rounded-lg hover:opacity-90 active:scale-95 transition-all shadow-lg">
+<span class="material-symbols-outlined">arrow_upward</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Bottom Navigation Shell (Mobile Only) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center h-20 pb-safe px-margin-mobile bg-surface/80 backdrop-blur-xl border-t border-outline-variant">
+<button class="flex flex-col items-center justify-center text-outline dark:text-outline-variant">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-label-caps text-[10px] mt-1">HOME</span>
+</button>
+<button class="flex flex-col items-center justify-center text-secondary dark:text-secondary-fixed font-bold scale-110 transition-transform duration-300 ease-out">
+<span class="material-symbols-outlined">forum</span>
+<span class="font-label-caps text-[10px] mt-1">CHAT</span>
+</button>
+<button class="flex flex-col items-center justify-center text-outline dark:text-outline-variant">
+<span class="material-symbols-outlined">swap_horiz</span>
+<span class="font-label-caps text-[10px] mt-1">TRANSACT</span>
+</button>
+<button class="flex flex-col items-center justify-center text-outline dark:text-outline-variant">
+<span class="material-symbols-outlined">account_balance_wallet</span>
+<span class="font-label-caps text-[10px] mt-1">PLANS</span>
+</button>
+</nav>
+<!-- Visual Atmosphere: Subtle background texture -->
+<div class="fixed inset-0 pointer-events-none opacity-[0.03] z-[-1]" style="background-image: radial-gradient(#4F46E5 1px, transparent 1px); background-size: 40px 40px;">
+</div>
+<!-- Decorative Image Card Background -->
+<div class="hidden lg:block fixed right-gutter top-1/2 -translate-y-1/2 w-80 space-y-6">
+<div class="rounded-xl overflow-hidden border border-outline-variant aspect-square group">
+<img alt="Financial analytics" class="w-full h-full object-cover grayscale opacity-50 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-700" data-alt="A sophisticated macro photograph of a high-resolution digital display showing complex financial data charts and glowing line graphs. The lighting is moody and cinematic, focusing on deep navy blues and sharp intelligence purple highlights. The aesthetic is clean and minimalist, reflecting a premium dark-mode interface for professional stock market analysis. The atmosphere is quiet, intelligent, and focused on high-stakes decision making." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDYWd21lCFWVjDMHiavx2JURh4dokkx9N6jnllNDEg8rZ401XAANkHpd57Bnkv2BzOEs-HllDTd6ju4hzZ_T7A-OxjNZvxrLwvvixA2oEeC6qb1z_zngXBnB83ux0ypbSkZnyYOZKEPBbcMvU69aE-8po4tY4M-2z0WTPUFAksObBdApq3xyF6WOQ1HbSwKWelWd5tM1X6ZJHciBJspXxe141ZMMcswDpKk8cb7At5sxVRK0iHvDeBNtXtNdIgUNSH2tO5xbWGdOYlv"/>
+</div>
+<div class="p-stack-md space-y-2">
+<h4 class="font-label-caps text-label-caps text-primary tracking-widest">OBSIDIAN INTELLIGENCE</h4>
+<p class="font-body-sm text-body-sm text-outline-variant">Vault's proprietary AI engine monitors 450+ data points in real-time to provide context-aware financial advice.</p>
+</div>
+</div>
+<script>
+        // Micro-interaction for input focus
+        const chatInput = document.querySelector('input');
+        const inputArea = chatInput.parentElement;
+
+        chatInput.addEventListener('focus', () => {
+            inputArea.classList.add('scale-[1.01]');
+            inputArea.style.transition = 'transform 0.3s ease-out';
+        });
+
+        chatInput.addEventListener('blur', () => {
+            inputArea.classList.remove('scale-[1.01]');
+        });
+
+        // Simple scroll to bottom on load
+        window.onload = () => {
+            window.scrollTo({
+                top: document.body.scrollHeight,
+                behavior: 'smooth'
+            });
+        };
+    </script>
+</body></html>

@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Vault - Premium Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&amp;family=Geist:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-container-highest": "#273647",
+                    "surface-bright": "#2c3a4c",
+                    "surface-container-high": "#1c2b3c",
+                    "on-tertiary-fixed-variant": "#3c475a",
+                    "on-primary-fixed": "#1a1c20",
+                    "surface-tint": "#c6c6cc",
+                    "primary-container": "#0f1115",
+                    "on-primary": "#2f3035",
+                    "on-surface-variant": "#c6c6cb",
+                    "tertiary-fixed": "#d8e3fb",
+                    "error-container": "#93000a",
+                    "secondary-container": "#3626ce",
+                    "outline-variant": "#45474b",
+                    "on-tertiary-container": "#727d92",
+                    "on-secondary-fixed": "#0f0069",
+                    "secondary-fixed": "#e2dfff",
+                    "on-secondary-container": "#b3b1ff",
+                    "on-secondary": "#1d00a5",
+                    "tertiary-container": "#061122",
+                    "on-primary-container": "#7b7c82",
+                    "surface-container-lowest": "#010f1f",
+                    "secondary-fixed-dim": "#c3c0ff",
+                    "surface-container": "#122131",
+                    "secondary": "#c3c0ff",
+                    "on-secondary-fixed-variant": "#3323cc",
+                    "inverse-primary": "#5d5e63",
+                    "primary": "#c6c6cc",
+                    "on-tertiary": "#263143",
+                    "surface-container-low": "#0d1c2d",
+                    "surface": "#051424",
+                    "outline": "#909095",
+                    "tertiary": "#bcc7de",
+                    "inverse-surface": "#d4e4fa",
+                    "on-surface": "#d4e4fa",
+                    "primary-fixed": "#e2e2e8",
+                    "on-tertiary-fixed": "#111c2d",
+                    "error": "#ffb4ab",
+                    "on-error-container": "#ffdad6",
+                    "inverse-on-surface": "#233143",
+                    "background": "#051424",
+                    "tertiary-fixed-dim": "#bcc7de",
+                    "surface-variant": "#273647",
+                    "surface-dim": "#051424",
+                    "on-background": "#d4e4fa",
+                    "on-primary-fixed-variant": "#45474b",
+                    "primary-fixed-dim": "#c6c6cc",
+                    "on-error": "#690005"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "stack-lg": "32px",
+                    "gutter": "24px",
+                    "container-max-width": "1280px",
+                    "margin-mobile": "16px",
+                    "stack-sm": "8px",
+                    "margin-desktop": "48px",
+                    "stack-md": "16px",
+                    "base": "8px"
+            },
+            "fontFamily": {
+                    "body-sm": ["Manrope"],
+                    "body-md": ["Manrope"],
+                    "headline-xl": ["Manrope"],
+                    "headline-lg-mobile": ["Manrope"],
+                    "label-caps": ["Manrope"],
+                    "headline-lg": ["Manrope"],
+                    "headline-md": ["Manrope"],
+                    "data-mono": ["Geist"],
+                    "body-lg": ["Manrope"]
+            },
+            "fontSize": {
+                    "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "headline-xl": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "headline-lg-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "600"}],
+                    "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "data-mono": ["14px", {"lineHeight": "20px", "fontWeight": "500"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .progress-ring-circle {
+            transition: stroke-dashoffset 0.35s;
+            transform: rotate(-90deg);
+            transform-origin: 50% 50%;
+        }
+        .glass-panel {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid #334155;
+        }
+        .vertical-accent {
+            border-left: 3px solid #4F46E5;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface font-body-md selection:bg-secondary/30">
+<!-- Top Navigation Bar -->
+<header class="fixed top-0 left-0 w-full z-50 bg-surface border-b border-outline-variant">
+<div class="flex justify-between items-center h-16 px-gutter w-full max-w-container-max-width mx-auto">
+<div class="flex items-center gap-stack-md">
+<button class="material-symbols-outlined text-primary scale-95 active:opacity-80 transition-all duration-200">menu</button>
+<span class="font-label-caps text-label-caps tracking-[0.2em] text-primary">VAULT</span>
+</div>
+<div class="flex items-center gap-stack-md">
+<nav class="hidden md:flex gap-stack-lg items-center mr-stack-lg">
+<a class="text-primary font-bold transition-colors hover:text-secondary" href="#">Dashboard</a>
+<a class="text-outline transition-colors hover:text-secondary" href="#">Analytics</a>
+<a class="text-outline transition-colors hover:text-secondary" href="#">Scholarship</a>
+</nav>
+<button class="material-symbols-outlined text-primary scale-95 active:opacity-80 transition-all duration-200">notifications</button>
+</div>
+</div>
+</header>
+<main class="pt-24 pb-32 px-margin-mobile md:px-margin-desktop max-w-container-max-width mx-auto">
+<!-- Header: Education Journey -->
+<section class="mb-stack-lg flex flex-col md:flex-row md:items-end justify-between gap-stack-md">
+<div>
+<h1 class="font-headline-lg text-headline-lg mb-2">Education Journey</h1>
+<p class="text-on-surface-variant font-body-sm">Tracking your academic financial stability for Q3</p>
+</div>
+<div class="w-full md:w-72 bg-surface-container rounded-full h-8 flex items-center px-4 relative overflow-hidden group">
+<div class="absolute inset-0 bg-secondary/10 w-[37.5%] transition-all duration-1000 ease-out"></div>
+<div class="relative z-10 w-full flex justify-between items-center">
+<span class="font-label-caps text-[10px] text-secondary">PROGRESS</span>
+<span class="font-data-mono text-data-mono text-secondary">37.5%</span>
+</div>
+</div>
+</section>
+<!-- Main Bento Grid -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-gutter">
+<!-- Daily Burn: Gauge Card -->
+<div class="md:col-span-4 glass-panel p-gutter rounded-xl flex flex-col items-center justify-center text-center relative overflow-hidden">
+<div class="absolute top-4 left-4 font-label-caps text-outline">DAILY BURN</div>
+<div class="relative mt-stack-md">
+<svg class="w-48 h-48">
+<circle class="text-surface-container-highest" cx="96" cy="96" fill="transparent" r="80" stroke="currentColor" stroke-width="8"></circle>
+<circle class="text-secondary progress-ring-circle" cx="96" cy="96" fill="transparent" r="80" stroke="currentColor" stroke-dasharray="502.6" stroke-dashoffset="180" stroke-linecap="round" stroke-width="8"></circle>
+</svg>
+<div class="absolute inset-0 flex flex-col items-center justify-center">
+<span class="font-headline-xl text-headline-xl text-on-surface">$567</span>
+<span class="font-label-caps text-outline">SPENT TODAY</span>
+</div>
+</div>
+<div class="mt-stack-md flex items-center gap-2 text-error font-data-mono">
+<span class="material-symbols-outlined text-[18px]">trending_up</span>
+<span>12% above average</span>
+</div>
+</div>
+<!-- Survival Check: Alert Card -->
+<div class="md:col-span-8 bg-surface-container-high border border-outline-variant p-gutter rounded-xl flex flex-col justify-between relative overflow-hidden">
+<div class="vertical-accent absolute left-0 top-0 bottom-0"></div>
+<div class="flex justify-between items-start">
+<div>
+<div class="flex items-center gap-stack-sm mb-stack-sm">
+<span class="material-symbols-outlined text-error" style="font-variation-settings: 'FILL' 1;">warning</span>
+<h2 class="font-headline-md text-headline-md">Survival Check</h2>
+</div>
+<p class="text-on-surface-variant max-w-md">Critical fund depletion detected for the current semester cycle. Projections indicate a shortfall for the remaining duration.</p>
+</div>
+<div class="text-right">
+<div class="font-headline-xl text-headline-xl text-error">12</div>
+<div class="font-label-caps text-outline">DAYS REMAINING</div>
+</div>
+</div>
+<div class="mt-stack-lg p-stack-md bg-background/50 rounded-lg border border-outline-variant/30 flex items-center justify-between">
+<div class="flex items-center gap-stack-md">
+<div class="w-12 h-12 bg-error-container/20 rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined text-error">account_balance_wallet</span>
+</div>
+<div>
+<div class="text-on-surface font-bold">$1,240.00</div>
+<div class="text-outline text-body-sm">Safe-to-spend balance</div>
+</div>
+</div>
+<button class="bg-secondary text-on-secondary px-stack-md py-2 font-label-caps rounded-lg hover:opacity-90 transition-opacity">
+                        ADJUST BUDGET
+                    </button>
+</div>
+</div>
+<!-- Spending Mix Section -->
+<div class="md:col-span-12">
+<h3 class="font-label-caps text-label-caps text-outline mb-stack-md px-2">SPENDING MIX BY CATEGORY</h3>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-gutter">
+<!-- Category: Canteen -->
+<div class="glass-panel p-stack-md rounded-xl group hover:border-secondary transition-colors cursor-pointer">
+<div class="flex justify-between items-start mb-stack-md">
+<div class="w-10 h-10 bg-surface-bright rounded-lg flex items-center justify-center">
+<span class="material-symbols-outlined text-secondary">restaurant</span>
+</div>
+<span class="font-data-mono text-outline">42%</span>
+</div>
+<div class="font-headline-md text-headline-md mb-1">Canteen</div>
+<div class="w-full bg-surface-container rounded-full h-1 mt-stack-sm overflow-hidden">
+<div class="bg-secondary h-full w-[42%] group-hover:bg-primary transition-colors"></div>
+</div>
+<div class="mt-stack-md flex justify-between items-baseline">
+<span class="text-outline text-body-sm">Avg. $22 / day</span>
+<span class="font-bold text-on-surface">$340.00</span>
+</div>
+</div>
+<!-- Category: Shuttle -->
+<div class="glass-panel p-stack-md rounded-xl group hover:border-secondary transition-colors cursor-pointer">
+<div class="flex justify-between items-start mb-stack-md">
+<div class="w-10 h-10 bg-surface-bright rounded-lg flex items-center justify-center">
+<span class="material-symbols-outlined text-secondary">commute</span>
+</div>
+<span class="font-data-mono text-outline">18%</span>
+</div>
+<div class="font-headline-md text-headline-md mb-1">Shuttle</div>
+<div class="w-full bg-surface-container rounded-full h-1 mt-stack-sm overflow-hidden">
+<div class="bg-secondary h-full w-[18%] group-hover:bg-primary transition-colors"></div>
+</div>
+<div class="mt-stack-md flex justify-between items-baseline">
+<span class="text-outline text-body-sm">Monthly Pass</span>
+<span class="font-bold text-on-surface">$145.00</span>
+</div>
+</div>
+<!-- Category: Subscriptions -->
+<div class="glass-panel p-stack-md rounded-xl group hover:border-secondary transition-colors cursor-pointer">
+<div class="flex justify-between items-start mb-stack-md">
+<div class="w-10 h-10 bg-surface-bright rounded-lg flex items-center justify-center">
+<span class="material-symbols-outlined text-secondary">subscriptions</span>
+</div>
+<span class="font-data-mono text-outline">12%</span>
+</div>
+<div class="font-headline-md text-headline-md mb-1">Subscriptions</div>
+<div class="w-full bg-surface-container rounded-full h-1 mt-stack-sm overflow-hidden">
+<div class="bg-secondary h-full w-[12%] group-hover:bg-primary transition-colors"></div>
+</div>
+<div class="mt-stack-md flex justify-between items-baseline">
+<span class="text-outline text-body-sm">Digital Tools</span>
+<span class="font-bold text-on-surface">$82.00</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Visualization / Activity -->
+<div class="md:col-span-12 glass-panel p-gutter rounded-xl overflow-hidden min-h-[300px] flex flex-col justify-between">
+<div class="flex justify-between items-center mb-stack-lg">
+<h3 class="font-headline-md text-headline-md">Flow Intensity</h3>
+<div class="flex gap-stack-sm">
+<button class="px-4 py-1 rounded border border-outline-variant font-label-caps text-[10px] text-outline">7D</button>
+<button class="px-4 py-1 rounded bg-secondary/10 border border-secondary font-label-caps text-[10px] text-secondary">30D</button>
+</div>
+</div>
+<div class="flex-1 flex items-end gap-2 md:gap-4 h-48 pb-4">
+<!-- Simple Mock Chart Bars -->
+<div class="flex-1 bg-surface-bright/30 rounded-t-sm h-[40%] hover:h-[45%] transition-all duration-300"></div>
+<div class="flex-1 bg-surface-bright/30 rounded-t-sm h-[60%] hover:h-[65%] transition-all duration-300"></div>
+<div class="flex-1 bg-secondary/40 rounded-t-sm h-[85%] hover:h-[90%] transition-all duration-300"></div>
+<div class="flex-1 bg-surface-bright/30 rounded-t-sm h-[30%] hover:h-[35%] transition-all duration-300"></div>
+<div class="flex-1 bg-surface-bright/30 rounded-t-sm h-[50%] hover:h-[55%] transition-all duration-300"></div>
+<div class="flex-1 bg-surface-bright/30 rounded-t-sm h-[75%] hover:h-[80%] transition-all duration-300"></div>
+<div class="flex-1 bg-secondary rounded-t-sm h-[95%] hover:h-[100%] transition-all duration-300"></div>
+<div class="flex-1 bg-surface-bright/30 rounded-t-sm h-[40%] hover:h-[45%] transition-all duration-300"></div>
+<div class="flex-1 bg-surface-bright/30 rounded-t-sm h-[55%] hover:h-[60%] transition-all duration-300"></div>
+<div class="flex-1 bg-surface-bright/30 rounded-t-sm h-[35%] hover:h-[40%] transition-all duration-300"></div>
+</div>
+<div class="flex justify-between text-outline font-label-caps text-[10px] pt-4 border-t border-outline-variant/30">
+<span>SEPT 01</span>
+<span>SEPT 15</span>
+<span>TODAY</span>
+</div>
+</div>
+</div>
+</main>
+<!-- Bottom Navigation Bar (Mobile) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center h-20 pb-safe px-margin-mobile bg-surface/80 backdrop-blur-xl border-t border-outline-variant">
+<div class="flex flex-col items-center justify-center text-secondary font-bold scale-110 transition-transform duration-300 ease-out">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-label-caps text-label-caps">Home</span>
+</div>
+<div class="flex flex-col items-center justify-center text-outline hover:text-primary transition-colors">
+<span class="material-symbols-outlined">swap_horiz</span>
+<span class="font-label-caps text-label-caps">Transact</span>
+</div>
+<div class="flex flex-col items-center justify-center text-outline hover:text-primary transition-colors">
+<span class="material-symbols-outlined">forum</span>
+<span class="font-label-caps text-label-caps">Chat</span>
+</div>
+<div class="flex flex-col items-center justify-center text-outline hover:text-primary transition-colors">
+<span class="material-symbols-outlined">school</span>
+<span class="font-label-caps text-label-caps">Campus</span>
+</div>
+<div class="flex flex-col items-center justify-center text-outline hover:text-primary transition-colors">
+<span class="material-symbols-outlined">account_balance_wallet</span>
+<span class="font-label-caps text-label-caps">Plans</span>
+</div>
+</nav>
+<!-- Floating Action Button -->
+<button class="fixed right-6 bottom-24 md:bottom-12 w-14 h-14 bg-primary text-on-primary rounded-full shadow-lg flex items-center justify-center hover:scale-105 transition-transform z-40">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">add</span>
+</button>
+<script>
+        // Simple interactivity for demonstration
+        document.querySelectorAll('.glass-panel').forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.style.transform = 'translateY(-4px)';
+                card.style.transition = 'transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)';
+            });
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'translateY(0)';
+            });
+        });
+
+        // Initialize progress ring offset
+        const circle = document.querySelector('.progress-ring-circle');
+        if (circle) {
+            const radius = circle.r.baseVal.value;
+            const circumference = radius * 2 * Math.PI;
+            circle.style.strokeDasharray = `${circumference} ${circumference}`;
+            // 567 spent out of a theoretical 800 limit for today = ~70% of day's goal
+            const offset = circumference - (0.7 * circumference);
+            circle.style.strokeDashoffset = offset;
+        }
+    </script>
+</body></html>

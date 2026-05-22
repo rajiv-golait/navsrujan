@@ -1,0 +1,11 @@
+user_id,full_name,email,college,course,year,monthly_budget,monthly_income,financial_personality,saving_goal,education_type,university,degree_duration,current_semester,semester_system,degree_start_date,expected_graduation,location_type,accommodation_type,created_at,account_status,profile_complete
+USR001,Aryan Mehta,aryan.mehta56@gmail.com,IIIT Hyderabad,BTech,2,11200,13204,disciplined_saver,emergency fund,BTech,IIIT Hyderabad,4,3,semester,2023-07-01,2027-05-31,metro,hostel,2023-08-02,active,True
+USR002,Priya Sharma,priya.sharma40@outlook.com,NMIMS Mumbai,MBA,1,35000,35196,impulsive_spender,travel,MBA,NMIMS Mumbai,2,1,trimester,2024-07-01,2026-05-31,metro,pg,2024-06-18,active,True
+USR003,Rohan Das,rohan.das83@yahoo.co.in,NIT Trichy,BTech,4,8700,8000,budget_survivor,emergency fund,BTech,NIT Trichy,4,7,semester,2021-07-01,2025-05-31,metro,hostel,2021-08-13,active,True
+USR004,Sneha Iyer,snehai47@yahoo.co.in,NID Ahmedabad,Design,2,15500,17244,social_spender,travel,Design,NID Ahmedabad,4,3,semester,2023-07-01,2027-05-31,tier2,rented_flat,2023-07-05,active,True
+USR005,Karan Joshi,karanj23@yahoo.co.in,IIIT Hyderabad,BTech,3,14300,28707,subscription_addict,startup fund,BTech,IIIT Hyderabad,4,5,semester,2022-07-01,2026-05-31,metro,hostel,2022-08-19,active,True
+USR006,Ananya Reddy,ananya.reddy89@gmail.com,COEP Pune,BTech,1,10200,11418,disciplined_saver,laptop purchase,BTech,COEP Pune,4,1,semester,2024-07-01,2028-05-31,tier2,hostel,2024-06-16,active,True
+USR007,Vikram Nair,nair.vikram56@yahoo.co.in,IIT Delhi,BTech,4,20000,22331,impulsive_spender,travel,BTech,IIT Delhi,4,7,semester,2021-07-01,2025-05-31,metro,hostel,2021-07-08,active,True
+USR008,Meera Pillai,meera_pillai77@gmail.com,Symbiosis Pune,MBA,2,19100,37904,balanced_spender,higher education,MBA,Symbiosis Pune,2,4,trimester,2023-07-01,2025-05-31,tier2,pg,2023-07-11,active,True
+USR009,Rahul Bansal,bansal.rahul31@gmail.com,AIIMS Delhi,Medical,3,11200,11103,budget_survivor,emergency fund,Medical,AIIMS Delhi,5,5,semester,2022-07-01,2027-05-31,metro,hostel,2022-07-05,active,True
+USR010,Divya Krishnan,divya.krishnan81@yahoo.co.in,NMIMS Mumbai,BBA,2,16800,14909,social_spender,travel,BBA,NMIMS Mumbai,3,3,semester,2023-07-01,2026-05-31,metro,home,2023-08-26,active,True

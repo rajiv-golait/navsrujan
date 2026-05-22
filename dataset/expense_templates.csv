@@ -1,0 +1,72 @@
+template_id,semester_number,expense_name,category,typical_amount_min,typical_amount_max,typical_amount_avg,is_mandatory,is_recurring,frequency,typical_occurrence_week,location_dependent,notes
+TMPL_ARCH,0,Semester Registration Fee,Examination,2568.02,8520.41,4652.77,True,True,once_per_semester,1,False,Paid at start of each architecture semester; non-negotiable; recurring each semester
+TMPL_ARCH,0,Large-Format Printing,Materials,818.48,3816.13,2230.81,True,True,once_per_semester,14,True,A0/A1 architectural drawings; metro print shops charge a premium; recurring each semester
+TMPL_ARCH,1,Drafting Instruments Set,Materials,1533.0,5170.11,2902.56,True,False,once,1,False,"Scales, set squares, parallel board — one-time purchase in Sem 1"
+TMPL_ARCH,2,AutoCAD / Revit Student License,Software,0.0,2100.94,492.28,True,True,once_per_semester,2,False,Often free via Autodesk Education program; institutional fees may apply; recurring each semester
+TMPL_ARCH,3,Model Making Materials,Project,1478.98,5674.36,3210.16,True,True,once_per_semester,8,False,"Foam board, balsa wood, acrylic sheets, adhesives for studio models; recurring each semester"
+TMPL_ARCH,5,Site Visit & Documentation,Travel,930.18,4867.37,2543.08,True,False,once_per_semester,6,True,Field visits for measured drawing and site analysis exercises; metro city pricing significantly higher
+TMPL_ARCH,9,Thesis Project Materials & Printing,Project,6207.94,19068.61,12341.85,True,False,once,10,True,"Final thesis boards, model, booklet printing; highest single academic cost; metro city pricing significantly higher"
+TMPL_BBA,0,Semester Registration Fee,Examination,1488.26,5752.45,3279.54,True,True,once_per_semester,1,False,Mandatory fee at each semester start; recurring each semester
+TMPL_BBA,0,Commerce & Management Textbooks,Academic,826.76,2986.57,1705.28,True,True,once_per_semester,1,False,Core books change each year as per BBA syllabus; recurring each semester
+TMPL_BBA,3,Digital Marketing Tools Subscription,Software,508.39,2546.09,1437.11,False,True,monthly,3,False,"SEMrush, Canva Pro, or HubSpot for digital marketing coursework; recurring each semester"
+TMPL_BBA,4,Internship Preparation,Placement,1556.48,5748.24,3046.6,False,False,once,5,False,Summer internship prep; GD/PI training + aptitude coaching
+TMPL_BBA,5,CA Foundation / CMA Study Materials,Certification,1889.44,7784.4,4536.23,False,False,once,4,False,Many BBA students pursue CA Foundation alongside degree
+TMPL_BBA,6,Business Attire for Placements,Placement,2129.12,6918.44,3750.31,False,False,once,2,True,Professional clothing for campus interview rounds; metro city pricing significantly higher
+TMPL_BTECH,0,Semester Registration Fee,Examination,2466.39,9101.1,5323.34,True,True,once_per_semester,1,False,Paid at semester start; amount varies by institution tier; recurring each semester
+TMPL_BTECH,0,End-Semester Examination Fee,Examination,1157.74,4663.72,2437.79,True,True,once_per_semester,12,False,Exam registration deadline typically 3 weeks before exams; recurring each semester
+TMPL_BTECH,0,Lab Fee,Lab,786.9,3077.41,1606.18,True,True,once_per_semester,2,False,"Covers lab consumables, equipment access, and safety materials; recurring each semester"
+TMPL_BTECH,0,Semester Textbooks,Academic,1273.65,4493.24,2381.19,True,True,once_per_semester,1,False,Core textbooks for enrolled subjects; varies by branch; recurring each semester
+TMPL_BTECH,0,Stationery & Printing,Academic,203.17,672.24,395.28,True,True,monthly,1,False,"Notebooks, pens, assignment printing; monthly recurring"
+TMPL_BTECH,1,Engineering Drawing Kit,Materials,589.41,1968.67,1120.06,True,False,once,1,False,"One-time purchase in Sem 1; includes drafter, scales, compass set"
+TMPL_BTECH,1,C/C++ Programming Course (Beginner),Software,474.71,2556.2,1242.0,False,False,once,3,False,Optional but highly recommended for CS/IT branches in Sem 1
+TMPL_BTECH,2,Reference Books (Core Subjects),Academic,586.46,2337.63,1303.73,False,False,once_per_semester,2,False,Supplementary references; used for competitive exam prep too
+TMPL_BTECH,3,Mini Project Materials,Project,830.74,3982.66,2178.58,True,False,once,6,False,Hardware/components for semester mini project; amount varies by domain
+TMPL_BTECH,4,NPTEL Online Certification,Certification,967.72,2793.2,1746.68,False,False,once_per_semester,4,False,IIT-backed courses with proctored exams; adds academic credit
+TMPL_BTECH,5,Cloud Certification (AWS/GCP Foundational),Certification,6411.24,14067.25,9463.98,False,False,once,8,True,Metro students often access training centers; higher cost in cities
+TMPL_BTECH,5,Industrial Visit Fee,Travel,844.83,3551.7,1885.81,False,False,once,7,True,Department-organized industry exposure; cost varies by distance; metro city pricing significantly higher
+TMPL_BTECH,5,Internship Preparation Course,Placement,2450.13,9602.15,5731.42,False,False,once,10,True,Domain-specific prep before summer internship applications; metro city pricing significantly higher
+TMPL_BTECH,6,Aptitude & Reasoning Training,Placement,1428.77,6245.14,3230.53,False,False,once,5,False,Quantitative aptitude + logical reasoning prep for campus drives
+TMPL_BTECH,7,Final Year Project (FYP) Materials,Project,5223.77,18827.25,9925.42,True,False,once,3,False,"Hardware, cloud, or research costs for FYP; mandatory for graduation"
+TMPL_BTECH,7,Placement Training Program,Placement,5338.02,21242.95,11176.33,False,False,once,2,True,Institute or third-party placement prep; required for competitive companies; metro city pricing significantly higher
+TMPL_BTECH,7,Mock Interview Coaching,Placement,1870.38,7466.1,4488.18,False,False,once,6,True,1-on-1 or group sessions; metro coaching centers charge premium
+TMPL_BTECH,8,Research Paper Submission Fee,Academic,942.04,4866.86,2376.42,False,False,once,4,False,Conference/journal processing fee for FYP publication
+TMPL_DATA,0,Semester Registration Fee,Examination,2016.02,7439.35,4035.2,True,True,once_per_semester,1,False,Paid each semester; amount varies by institution type; recurring each semester
+TMPL_DATA,0,Cloud Credits (AWS / GCP / Azure),Software,971.32,5179.66,2937.71,True,True,once_per_semester,2,False,"Essential for ML experiments, model training, and deployment labs; recurring each semester"
+TMPL_DATA,1,Kaggle / DataCamp Pro Subscription,Software,1561.66,3943.13,2418.06,False,True,quarterly,1,False,Hands-on platform subscription; highly recommended from Sem 1; recurring each semester
+TMPL_DATA,2,Deep Learning / ML Certification,Certification,2983.55,11375.83,6259.93,False,False,once,5,False,Coursera/deeplearning.ai specializations for portfolio building
+TMPL_DATA,3,Research Paper Access (IEEE / Springer),Academic,496.26,3147.09,1530.28,False,True,once_per_semester,3,False,Institutional access may not cover all journals; personal access needed; recurring each semester
+TMPL_DATA,4,Thesis Research & GPU Compute,Project,2965.63,15954.1,6775.18,True,False,once,4,False,Colab Pro+ or runpod.io GPU costs for thesis model training
+TMPL_DES,0,Adobe Creative Cloud,Software,1518.0,3278.36,2331.92,True,True,once_per_semester,1,False,Recurring design software; mandatory for coursework deliverables
+TMPL_DES,0,Art Supplies & Studio Materials,Materials,591.52,3135.39,1583.91,True,True,once_per_semester,1,False,"Sketchbooks, markers, watercolors, cutting mats; replenished each sem; recurring each semester"
+TMPL_DES,0,Semester Registration Fee,Examination,1975.94,7855.49,4316.7,True,True,once_per_semester,1,False,Paid at term start; NID and premium design schools charge higher; recurring each semester
+TMPL_DES,1,Figma Pro Subscription,Software,842.51,1588.84,1124.38,False,True,monthly,2,False,UI/UX design tool; widely used from Sem 1 in design programs; recurring each semester
+TMPL_DES,3,Prototype & Model Making Costs,Project,1478.7,5952.94,3139.65,True,False,once_per_semester,8,False,Physical prototyping for product/industrial design projects
+TMPL_DES,4,Portfolio Printing (Mid-Program),Materials,2043.21,6128.83,3433.73,False,False,once,13,True,High-quality print for review juries; metro print shops cost more
+TMPL_DES,5,Design Workshop / Masterclass,Certification,2104.78,8247.21,3887.44,False,False,once,6,True,Industry masterclasses; city-based workshops cost more; metro city pricing significantly higher
+TMPL_DES,7,Final Portfolio Production,Project,4173.19,12292.82,6824.8,True,False,once,10,True,Graduation portfolio printing; premium large-format printing; metro city pricing significantly higher
+TMPL_DES,7,Exhibition Setup & Display Costs,Project,1942.99,8281.69,4311.06,True,False,once,14,True,Final year graduation exhibition; venue and display material costs; metro city pricing significantly higher
+TMPL_LAW,0,Semester Registration Fee,Examination,1930.05,6778.11,3827.61,True,True,once_per_semester,1,False,Paid at each semester start; NLU fees higher than private colleges; recurring each semester
+TMPL_LAW,0,Legal Database Subscription (SCC / Manupatra),Software,1581.85,4917.86,3098.0,True,True,once_per_semester,2,False,Access to case laws and statutes; essential research tool; recurring each semester
+TMPL_LAW,0,Law Textbooks & Bare Acts,Academic,1061.17,3988.34,2286.44,True,True,once_per_semester,1,False,Subject-specific bare acts and commentaries; changes every semester; recurring each semester
+TMPL_LAW,3,Moot Court Competition Fee,Networking,1054.5,4983.45,2417.37,False,False,once,8,True,Registration + travel for inter-college moot courts; city-dependent cost; metro city pricing significantly higher
+TMPL_LAW,5,Law Firm Internship Travel,Travel,1880.93,7708.32,4481.94,False,False,once,2,True,Travel and accommodation costs for vacation internships at law firms; metro city pricing significantly higher
+TMPL_LAW,9,Bar Council Enrollment Fee,Examination,2796.47,7809.32,4997.06,True,False,once,14,False,State Bar Council enrollment fee upon completing LLB — mandatory
+TMPL_MBA,0,Term Registration Fee,Examination,2928.47,10032.76,5820.48,True,True,once_per_semester,1,False,Paid each trimester; higher at top-tier B-schools; recurring each semester
+TMPL_MBA,0,Case Study Materials (HBR / IVEY),Academic,520.11,1875.51,1068.26,True,True,once_per_semester,1,False,Harvard/IVEY case packs; mandatory for most MBA programs; recurring each semester
+TMPL_MBA,0,Notion Pro / Productivity Suite,Software,289.82,887.91,564.51,False,True,monthly,1,False,Widely used for MBA project management and note-taking; recurring each semester
+TMPL_MBA,1,Networking Event Registration,Networking,979.53,5136.5,2605.55,False,False,once_per_semester,5,True,"Industry alumni meets, B-school conclaves; metro events pricier"
+TMPL_MBA,1,Business Conference Fee,Networking,1896.66,8407.6,4241.86,False,False,once,7,True,Optional but adds to professional profile; metro events cost more
+TMPL_MBA,2,LinkedIn Premium Subscription,Placement,1241.53,2537.81,1783.49,False,True,monthly,1,False,Recommended from Term 2 for recruiter visibility and job search; recurring each semester
+TMPL_MBA,2,CFA / CMA Study Materials,Certification,7548.06,19002.25,12576.38,False,False,once,4,False,Optional but high ROI for finance-track MBA students
+TMPL_MBA,3,Summer Internship Preparation,Placement,1909.74,7602.97,4368.41,False,False,once,3,True,Pre-internship skill building; case interview and GD/PI prep; metro city pricing significantly higher
+TMPL_MBA,4,Business Formal Attire,Placement,3025.61,10378.79,6178.78,False,False,once,2,True,Required for campus placement dress code; metro tailors charge more
+TMPL_MBA,5,MBA Thesis / Capstone Project,Project,1912.07,7521.08,3915.09,True,False,once,4,False,"Research, printing, and binding costs for final MBA capstone"
+TMPL_MBA,5,Final Placement Coaching,Placement,5242.29,17035.38,10322.35,False,False,once,1,True,Intensive coaching for final campus recruitment season; metro city pricing significantly higher
+TMPL_MED,0,University Examination Fee,Examination,1982.59,6389.6,3414.67,True,True,once_per_semester,12,False,Mandatory for all theory + practical exams; university-regulated; recurring each semester
+TMPL_MED,0,Medical Reference Books,Academic,2000.88,6342.05,3942.35,True,False,once_per_semester,1,False,Subject-specific textbooks change each year of MBBS curriculum
+TMPL_MED,0,Practical Lab Fee,Lab,1040.35,4018.62,2294.56,True,True,once_per_semester,2,False,"Lab consumables, reagent access, specimen handling costs; recurring each semester"
+TMPL_MED,1,Clinical Instruments Kit,Lab,2897.87,8427.37,4954.67,True,False,once,1,False,"Stethoscope, BP cuff, reflex hammer, ophthalmoscope — one-time purchase"
+TMPL_MED,1,Lab Coat & Clinical Uniform,Materials,613.29,2031.08,1076.05,True,False,once,1,False,Mandatory for hospital rotations from Sem 1
+TMPL_MED,3,Anatomy Dissection Atlas,Academic,1229.94,3551.1,2307.2,True,False,once,2,False,Specialized atlas for gross anatomy practical sessions
+TMPL_MED,7,NEET-PG / USMLE Preparation,Certification,5116.75,17848.93,9879.82,False,False,once,4,True,PG entrance coaching; major investment in final years; metro city pricing significantly higher
+TMPL_MED,8,Hospital Practical / OSCE Fee,Examination,1581.37,4891.77,3050.12,True,False,once_per_semester,13,False,Objective Structured Clinical Examination fee; mandatory for MBBS completion
