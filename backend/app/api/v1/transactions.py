@@ -251,7 +251,7 @@ async def add_natural_transaction(
             source_text=body.text,
             confidence_score=parsed.confidence,
             is_academic=parsed.transaction.is_academic,
-            transaction_type="debit",
+            transaction_type=parsed.transaction.transaction_type or "debit",
         )
         saved_txn = service.create(txn_create)
         return AddNaturalResponse(

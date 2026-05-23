@@ -32,6 +32,11 @@ def transactions_to_dataframe(transactions: list[dict[str, Any]]) -> pd.DataFram
     df["semester_number"] = pd.to_numeric(
         df.get("semester_number", 1), errors="coerce"
     ).fillna(1)
+    
+    # Filter out credit transactions (income)
+    if "transaction_type" in df.columns:
+        df = df[df["transaction_type"] != "credit"]
+        
     df["amount"] = pd.to_numeric(df["amount"], errors="coerce")
     df = df[df["amount"] > 0]
     return df
@@ -62,9 +67,23 @@ def engineer_features(
 
     df = df.sort_values("transaction_date")
 
-    df["rolling_7d_spend"] = df["amount"].rolling(7, min_periods=1).sum()
-    df["rolling_30d_spend"] = df["amount"].rolling(30, min_periods=1).sum()
-    df["avg_daily_spend"] = df["rolling_30d_spend"] / 30
+    # Calculate rolling sums using time-based window (requires datetime index)
+    df_time = df.set_index("transaction_date")
+    # For time-based rolling, we need to sort the index
+    df_time = df_time.sort_index()
+    
+    # Calculate 7d and 30d rolling sums based on actual time windows, not row counts
+    rolling_7d = df_time["amount"].rolling("7D").sum()
+    rolling_30d = df_time["amount"].rolling("30D").sum()
+    
+    # Map back to original dataframe (which might have multiple transactions per day)
+    # Since we sorted by transaction_date, we can assign directly by index
+    df["rolling_7d_spend"] = rolling_7d.values
+    df["rolling_30d_spend"] = rolling_30d.values
+    
+    # Average daily spend over the actual days span
+    # We'll calculate the true average later in inference.py and features.py
+    df["avg_daily_spend"] = df["rolling_30d_spend"] / 30.0
 
     df["impulsive_score"] = (
         df["is_weekend"] * 0.4
@@ -85,13 +104,27 @@ def aggregate_user_features(feature_df: pd.DataFrame) -> dict[str, float]:
         return {}
 
     latest = feature_df.iloc[-1]
+    # Calculate actual days span of the data
+    min_date = pd.to_datetime(feature_df["transaction_date"]).min()
+    max_date = pd.to_datetime(feature_df["transaction_date"]).max()
+    days_span = max(1, (max_date - min_date).days + 1)
+    
+    # Use the smaller of 30 days or actual days span
+    effective_days = min(30, days_span)
+    
+    # Get the latest rolling 30d spend
+    rolling_30d = float(latest.get("rolling_30d_spend", 0) or 0)
+    
+    # Calculate true daily burn rate
+    avg_daily = rolling_30d / effective_days if effective_days > 0 else 0.0
+    
     return {
         "amount_mean": float(feature_df["amount"].mean()),
         "is_weekend_mean": float(feature_df["is_weekend"].mean()),
         "budget_utilization_mean": float(feature_df["budget_utilization"].mean()),
         "impulsive_score_mean": float(feature_df["impulsive_score"].mean()),
         "subscription_burden_sum": float(feature_df["subscription_burden"].sum()),
-        "avg_daily_spend": float(latest.get("avg_daily_spend", 0)),
+        "avg_daily_spend": avg_daily,
         "rolling_7d_spend": float(latest.get("rolling_7d_spend", 0)),
         "monthly_budget": float(latest.get("monthly_budget", 10000)),
         "financial_stress_score": float(latest.get("financial_stress_score", 0)),

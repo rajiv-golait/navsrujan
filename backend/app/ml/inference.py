@@ -78,7 +78,23 @@ def generate_intelligence(
     feature_df = _stress_from_features(feature_df)
     latest = feature_df.iloc[-1]
 
-    avg_daily = float(latest.get("avg_daily_spend", 0) or 0)
+    # Calculate daily burn rate correctly using time-based window
+    # The previous logic was just taking the rolling 30d sum and dividing by 30
+    # But if the user only has 5 days of data, dividing by 30 gives an artificially low burn rate
+    
+    # Calculate actual days span of the data
+    min_date = feature_df["transaction_date"].min()
+    max_date = feature_df["transaction_date"].max()
+    days_span = max(1, (max_date - min_date).days + 1)
+    
+    # Use the smaller of 30 days or actual days span
+    effective_days = min(30, days_span)
+    
+    # Get the latest rolling 30d spend (which is actually just the sum of the last 30 days)
+    rolling_30d = float(latest.get("rolling_30d_spend", 0) or 0)
+    
+    # Calculate true daily burn rate
+    avg_daily = rolling_30d / effective_days if effective_days > 0 else 0.0
     monthly_budget = float(profile.get("monthly_budget") or 0)
     days_remaining = (
         max(0, int(monthly_budget / avg_daily)) if avg_daily > 0 else 30

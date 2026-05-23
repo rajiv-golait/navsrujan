@@ -38,6 +38,8 @@ export interface Transaction {
   transaction_type?: "debit" | "credit";
 }
 
+export type TransactionType = "debit" | "credit";
+
 export interface TransactionCreate {
   amount: number;
   category: TransactionCategory;
@@ -46,6 +48,7 @@ export interface TransactionCreate {
   transaction_date: string;
   entry_method?: string;
   is_academic?: boolean;
+  transaction_type?: TransactionType;
 }
 
 export interface CategorySummary {

@@ -5,12 +5,9 @@ import { Plus, Download, Upload } from "lucide-react";
 import Link from "next/link";
 import { toast } from "sonner";
 
-import {
-  NaturalLanguageInput,
-  type TransactionFormInitialValues,
-} from "@/components/transactions/NaturalLanguageInput";
-import { AddTransactionForm } from "@/components/transactions/AddTransactionForm";
+import { useAddTransactionDialog } from "@/components/transactions/AddTransactionDialog";
 import { TransactionList } from "@/components/transactions/TransactionList";
+import { TransactionsPageMenu } from "@/components/transactions/TransactionsPageMenu";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -71,15 +68,13 @@ function getPeriodStartDate(activeTimePeriod: string): Date | null {
 }
 
 export default function TransactionsPage() {
-  const [dialogOpen, setDialogOpen] = useState(false);
+  const { open: openAddDialog } = useAddTransactionDialog();
   const [importDialogOpen, setImportDialogOpen] = useState(false);
   const [parserType, setParserType] = useState<"phonepe" | "gpay">("phonepe");
   const [pdfFile, setPdfFile] = useState<File | null>(null);
   const [previewData, setPreviewData] = useState<PdfImportPreviewResult | null>(null);
   const [previewKey, setPreviewKey] = useState<string | null>(null);
   const [previewToken, setPreviewToken] = useState<string | null>(null);
-  const [formInitialValues, setFormInitialValues] =
-    useState<TransactionFormInitialValues | null>(null);
   const [activeCategory, setActiveCategory] = useState("All Categories");
   const [activeTimePeriod, setActiveTimePeriod] = useState("Last 7 Days");
   const { data: transactions, isLoading } = useTransactions(100);
@@ -112,18 +107,6 @@ export default function TransactionsPage() {
       }, 0),
     [filteredTransactions],
   );
-
-  const handleParsed = (values: TransactionFormInitialValues) => {
-    setFormInitialValues(values);
-    setDialogOpen(true);
-  };
-
-  const handleDialogClose = (open: boolean) => {
-    setDialogOpen(open);
-    if (!open) {
-      setFormInitialValues(null);
-    }
-  };
 
   const handleImportPdf = async () => {
     if (!pdfFile) {
@@ -199,7 +182,6 @@ export default function TransactionsPage() {
         <p className="text-label-caps text-[var(--stitch-on-surface-variant)]">Transactions</p>
         <h1 className="text-headline-mobile text-[var(--stitch-on-surface)]">Spend ledger</h1>
       </header>
-      <NaturalLanguageInput onParsed={handleParsed} />
 
       <div className="space-y-4">
         <div className="vault-card p-3">
@@ -241,6 +223,7 @@ export default function TransactionsPage() {
               Recent History
             </h2>
             <div className="flex items-center gap-2 flex-wrap">
+              <TransactionsPageMenu onImportPdf={() => setImportDialogOpen(true)} />
               <Dialog
                 open={importDialogOpen}
                 onOpenChange={(open) => {
@@ -370,28 +353,14 @@ export default function TransactionsPage() {
                 <Download className="h-3 w-3" />
                 Download CSV
               </button>
-              <Dialog open={dialogOpen} onOpenChange={handleDialogClose}>
-                <DialogTrigger
-                  render={
-                    <Button className="bg-[var(--stitch-primary)] hover:bg-[var(--stitch-primary)]/90 text-white rounded-xl h-9 px-3 text-xs sm:text-sm sm:h-10 sm:px-4" />
-                  }
-                >
-                  <Plus className="mr-2 h-4 w-4" />
-                  Add
-                </DialogTrigger>
-                <DialogContent>
-                  <DialogHeader>
-                    <DialogTitle>Add transaction</DialogTitle>
-                    <DialogDescription>
-                      Record a new expense manually or confirm AI-parsed values
-                    </DialogDescription>
-                  </DialogHeader>
-                  <AddTransactionForm
-                    initialValues={formInitialValues}
-                    onSuccess={() => handleDialogClose(false)}
-                  />
-                </DialogContent>
-              </Dialog>
+              <Button
+                type="button"
+                onClick={openAddDialog}
+                className="bg-[var(--stitch-primary)] hover:bg-[var(--stitch-primary)]/90 text-white rounded-xl h-9 px-3 text-xs sm:text-sm sm:h-10 sm:px-4"
+              >
+                <Plus className="mr-2 h-4 w-4" />
+                Add
+              </Button>
             </div>
           </div>
 
@@ -400,7 +369,7 @@ export default function TransactionsPage() {
             <TransactionList
               transactions={filteredTransactions}
               isLoading={isLoading}
-              onAddTrigger={() => setDialogOpen(true)}
+              onAddTrigger={openAddDialog}
             />
           </div>
 

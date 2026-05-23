@@ -16,6 +16,13 @@ def _prepare_prophet_data(
     if df.empty:
         return pd.DataFrame(columns=["ds", "y"])
     
+    # Filter out credit transactions
+    if "transaction_type" in df.columns:
+        df = df[df["transaction_type"] != "credit"]
+        
+    if df.empty:
+        return pd.DataFrame(columns=["ds", "y"])
+        
     # Filter by category if specified
     if category and "category" in df.columns:
         df = df[df["category"] == category].copy()
@@ -27,6 +34,13 @@ def _prepare_prophet_data(
     # Group by date and sum amounts
     daily = df.groupby("transaction_date")["amount"].sum().reset_index()
     daily.columns = ["ds", "y"]
+    
+    # Fill missing dates with 0 to prevent Prophet from overestimating
+    if not daily.empty:
+        daily = daily.set_index("ds")
+        idx = pd.date_range(daily.index.min(), daily.index.max())
+        daily = daily.reindex(idx, fill_value=0).reset_index()
+        daily.columns = ["ds", "y"]
     
     return daily
 

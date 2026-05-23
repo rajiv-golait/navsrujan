@@ -6,6 +6,7 @@ export interface ParsedTransactionData {
   transaction_date: string;
   entry_method?: string;
   is_academic?: boolean;
+  transaction_type?: "debit" | "credit";
   confidence_score?: number | null;
 }
 

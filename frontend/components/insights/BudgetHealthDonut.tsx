@@ -13,6 +13,8 @@ interface BudgetHealthDonutProps {
     savings_amount: number;
     total_spent: number;
     monthly_income: number;
+    is_overspent?: boolean;
+    overspend_amount?: number;
     recommended_reallocation?: {
       cut_from: string;
       cut_amount: number;
@@ -23,19 +25,47 @@ interface BudgetHealthDonutProps {
   };
 }
 
+function formatPercent(value: number) {
+  if (!Number.isFinite(value)) return "0.0";
+  return `${Math.min(999, Math.max(0, value)).toFixed(1)}`;
+}
+
 export function BudgetHealthDonut({ budgetHealth }: BudgetHealthDonutProps) {
-  const { needs_percent, wants_percent, savings_percent, recommended_reallocation, status } =
-    budgetHealth;
+  const {
+    needs_percent,
+    wants_percent,
+    savings_percent,
+    recommended_reallocation,
+    is_overspent,
+    overspend_amount,
+    monthly_income,
+  } = budgetHealth;
+
+  const savingsLabel = is_overspent ? "Overspent" : "Savings";
+  const savingsDisplayPercent = is_overspent ? 0 : savings_percent;
+  const savingsDisplayAmount = is_overspent
+    ? (overspend_amount ?? Math.max(0, budgetHealth.total_spent - monthly_income))
+    : budgetHealth.savings_amount;
 
   const data = [
-    { name: "Needs", value: needs_percent, target: 50, amount: budgetHealth.needs_amount },
-    { name: "Wants", value: wants_percent, target: 30, amount: budgetHealth.wants_amount },
-    { name: "Savings", value: savings_percent, target: 20, amount: budgetHealth.savings_amount },
+    { name: "Needs", value: Math.max(0, Math.min(needs_percent, 100)), target: 50, amount: budgetHealth.needs_amount, actualPercent: needs_percent },
+    { name: "Wants", value: Math.max(0, Math.min(wants_percent, 100)), target: 30, amount: budgetHealth.wants_amount, actualPercent: wants_percent },
+    {
+      name: savingsLabel,
+      value: Math.max(0, savingsDisplayPercent),
+      target: 20,
+      amount: savingsDisplayAmount,
+      actualPercent: savingsDisplayPercent,
+      isOverspend: Boolean(is_overspent),
+    },
   ];
 
-  const COLORS = ["#3B82F6", "#8B5CF6", "#10B981"];
+  const COLORS = ["#3B82F6", "#8B5CF6", is_overspent ? "#EF4444" : "#10B981"];
 
-  const getStatusIcon = (value: number, target: number, name: string) => {
+  const getStatusIcon = (value: number, target: number, name: string, isOverspend?: boolean) => {
+    if (isOverspend || name === "Overspent") {
+      return <XCircle className="w-4 h-4 text-red-500" />;
+    }
     const diff = Math.abs(value - target);
     if (name === "Savings") {
       if (value >= target) return <Check className="w-4 h-4 text-emerald-500" />;
@@ -50,9 +80,9 @@ export function BudgetHealthDonut({ budgetHealth }: BudgetHealthDonutProps) {
   return (
     <div className="vault-card p-4 sm:p-6">
       <h2 className="text-base sm:text-lg font-bold mb-4">Budget Health (50/30/20)</h2>
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
-        <div className="flex items-center justify-center">
-          <ResponsiveContainer width="100%" height={240}>
+      <div className="grid grid-cols-1 gap-4 sm:gap-6 xl:grid-cols-[minmax(12rem,1fr)_minmax(16rem,1.2fr)]">
+        <div className="flex min-w-0 items-center justify-center overflow-hidden">
+          <ResponsiveContainer width="100%" height={240} minWidth={0}>
             <PieChart>
               <Pie
                 data={data}
@@ -75,7 +105,7 @@ export function BudgetHealthDonut({ budgetHealth }: BudgetHealthDonutProps) {
                       <div className="vault-card p-3 border border-[var(--stitch-outline)]">
                         <p className="font-semibold text-sm">{data.name}</p>
                         <p className="text-xs text-[var(--stitch-on-surface-variant)]">
-                          Current: {data.value.toFixed(1)}%
+                          Current: {data.actualPercent.toFixed(1)}%
                         </p>
                         <p className="text-xs text-[var(--stitch-on-surface-variant)]">
                           Target: {data.target}%
@@ -106,12 +136,20 @@ export function BudgetHealthDonut({ budgetHealth }: BudgetHealthDonutProps) {
                     style={{ backgroundColor: COLORS[index] }}
                   />
                   <span className="font-semibold text-sm">{item.name}</span>
-                  {getStatusIcon(item.value, item.target, item.name)}
+                  {getStatusIcon(item.value, item.target, item.name, "isOverspend" in item && item.isOverspend)}
                 </div>
-                <span className="text-sm font-bold">{item.value.toFixed(1)}%</span>
+                <span className="text-sm font-bold">
+                  {"isOverspend" in item && item.isOverspend
+                    ? `₹${item.amount.toLocaleString("en-IN")} over`
+                    : `${formatPercent(item.actualPercent)}%`}
+                </span>
               </div>
               <div className="flex justify-between text-xs text-[var(--stitch-on-surface-variant)]">
-                <span>Target: {item.target}%</span>
+                <span>
+                  {"isOverspend" in item && item.isOverspend
+                    ? `Budget: ₹${monthly_income.toLocaleString("en-IN")}`
+                    : `Target: ${item.target}%`}
+                </span>
                 <span>₹{item.amount.toLocaleString("en-IN")}</span>
               </div>
             </div>

@@ -37,28 +37,26 @@ export function BalanceStrip({ compact = false }: BalanceStripProps) {
 
   if (compact) {
     return (
-      <div className="vault-card p-3 md:p-4">
-        <div className="grid grid-cols-3 gap-3">
-          <div>
-            <p className="text-label-caps text-[10px] text-[var(--stitch-on-surface-variant)] flex items-center gap-1">
-              <Wallet className="h-3 w-3" /> Balance
-            </p>
-            <p className="text-data-mono text-base md:text-lg font-semibold text-[var(--stitch-on-surface)] mt-0.5">
-              {formatCurrency(balance.current_balance ?? 0)}
-            </p>
-          </div>
-          <div>
-            <p className="text-label-caps text-[10px] text-[var(--stitch-on-surface-variant)]">30d projected</p>
-            <p className={`text-data-mono text-base md:text-lg font-semibold mt-0.5 ${projectedClass}`}>
-              {formatCurrency(balance.projected_balance_30d ?? 0)}
-            </p>
-          </div>
-          <div>
-            <p className="text-label-caps text-[10px] text-[var(--stitch-on-surface-variant)]">Runway</p>
-            <p className="text-data-mono text-base md:text-lg font-semibold text-[var(--stitch-on-surface)] mt-0.5">
-              {runwayDays} days
-            </p>
-          </div>
+      <div className="flex w-full flex-wrap items-baseline justify-between gap-x-8 gap-y-1 text-sm">
+        <div className="flex items-baseline gap-2 min-w-0">
+          <span className="text-label-caps text-[10px] text-[var(--stitch-on-surface-variant)] flex items-center gap-1 shrink-0">
+            <Wallet className="h-3 w-3" /> Balance
+          </span>
+          <span className="text-data-mono font-semibold text-[var(--stitch-on-surface)] truncate">
+            {formatCurrency(balance.current_balance ?? 0)}
+          </span>
+        </div>
+        <div className="flex items-baseline gap-2 min-w-0">
+          <span className="text-label-caps text-[10px] text-[var(--stitch-on-surface-variant)] shrink-0">30D projected</span>
+          <span className={`text-data-mono font-semibold truncate ${projectedClass}`}>
+            {formatCurrency(balance.projected_balance_30d ?? 0)}
+          </span>
+        </div>
+        <div className="flex items-baseline gap-2 min-w-0">
+          <span className="text-label-caps text-[10px] text-[var(--stitch-on-surface-variant)] shrink-0">Runway</span>
+          <span className="text-data-mono font-semibold text-[var(--stitch-on-surface)]">
+            {runwayDays} days
+          </span>
         </div>
       </div>
     );

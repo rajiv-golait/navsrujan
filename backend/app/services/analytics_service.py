@@ -47,6 +47,7 @@ def transactions_as_dicts(client: Client, user_id: str, limit: int = 2000) -> li
                 "is_recurring": False,
                 "semester_number": t.semester_number,
                 "is_academic": t.is_academic,
+                "transaction_type": getattr(t, "transaction_type", "debit"),
             }
         )
     return result
@@ -136,7 +137,12 @@ def build_full_snapshot(client: Client, user_id: str) -> dict[str, Any]:
             savings_opportunities = generate_savings_recommendations(txns, profile, peer_avgs)
             
             # Calculate budget health (50/30/20)
-            budget_health = calculate_budget_allocation(txns, profile.get("monthly_income", 10000))
+            monthly_reference = float(
+                profile.get("monthly_budget")
+                or profile.get("monthly_income")
+                or 10000
+            )
+            budget_health = calculate_budget_allocation(txns, monthly_reference)
             
             # Predict survival
             survival_forecast = predict_month_end_survival(

@@ -19,6 +19,7 @@ class ParsedTransactionData(BaseModel):
     transaction_date: str
     entry_method: str = "nlp"
     is_academic: bool = False
+    transaction_type: str = "debit"
     confidence_score: Optional[float] = None
 
 

@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { useParseExpense } from "@/lib/hooks/useNlpParse";
 import { getApiErrorMessage } from "@/lib/api-errors";
 import type { ParsedTransactionData } from "@/types/chat";
-import type { TransactionCategory } from "@/types/transaction";
+import type { TransactionCategory, TransactionType } from "@/types/transaction";
 
 export interface TransactionFormInitialValues {
   amount: string;
@@ -16,15 +16,18 @@ export interface TransactionFormInitialValues {
   merchant: string;
   description: string;
   transactionDate: string;
+  transactionType?: TransactionType;
   sourceText?: string;
   confidenceScore?: number;
 }
 
 interface NaturalLanguageInputProps {
   onParsed: (values: TransactionFormInitialValues) => void;
+  /** Compact styling for use inside a dialog */
+  inDialog?: boolean;
 }
 
-export function NaturalLanguageInput({ onParsed }: NaturalLanguageInputProps) {
+export function NaturalLanguageInput({ onParsed, inDialog = false }: NaturalLanguageInputProps) {
   const [text, setText] = useState("");
   const [isFocused, setIsFocused] = useState(false);
   const parseMutation = useParseExpense();
@@ -53,19 +56,29 @@ export function NaturalLanguageInput({ onParsed }: NaturalLanguageInputProps) {
         merchant: txn.merchant || "",
         description: txn.description || "",
         transactionDate: txn.transaction_date,
+        transactionType: (txn.transaction_type === "credit" ? "credit" : "debit"),
         sourceText: result.source_text || trimmed,
         confidenceScore: result.confidence,
       });
-      toast.success("Parsed — review and confirm below");
+      toast.success(inDialog ? "Parsed — confirm below" : "Parsed — review and confirm below");
       setText("");
     } catch (error) {
       toast.error(getApiErrorMessage(error, "Failed to parse expense"));
     }
   };
 
+  const shellClass = inDialog
+    ? "relative rounded-xl border border-[var(--stitch-outline)] bg-[var(--stitch-surface)] overflow-hidden"
+    : "relative bg-[var(--stitch-surface-container-lowest)] rounded-[1.5rem] stitch-card overflow-hidden";
+
   return (
-    <div className="gradient-glow">
-      <div className="relative bg-[var(--stitch-surface-container-lowest)] rounded-[1.5rem] stitch-card overflow-hidden">
+    <div className={inDialog ? "space-y-2" : "gradient-glow"}>
+      {inDialog && (
+        <p className="text-xs text-[var(--stitch-on-surface-variant)]">
+          Describe the expense in plain English — AI will fill the form below.
+        </p>
+      )}
+      <div className={shellClass}>
         <input
           type="text"
           value={text}
@@ -78,14 +91,21 @@ export function NaturalLanguageInput({ onParsed }: NaturalLanguageInputProps) {
               handleParse();
             }
           }}
-          placeholder={isFocused ? "Try 'Bought textbook for 85'" : "Spent 250 on pizza..."}
-          className="w-full bg-transparent border-none focus:ring-0 focus:outline-none text-base py-4 px-5 pr-14 placeholder:text-[var(--stitch-on-surface-variant)]/50 font-medium text-[var(--stitch-on-surface)]"
+          placeholder={
+            isFocused
+              ? "Try 'received 500 from mom' or 'pizza 250'"
+              : "Spent 250 on pizza… or received 500 from mom"
+          }
+          className={`w-full bg-transparent border-none focus:ring-0 focus:outline-none text-base pr-14 placeholder:text-[var(--stitch-on-surface-variant)]/50 font-medium text-[var(--stitch-on-surface)] ${
+            inDialog ? "py-3 px-4" : "py-4 px-5"
+          }`}
         />
         <Button
           type="button"
           onClick={handleParse}
           disabled={parseMutation.isPending || !text.trim()}
           className="absolute right-3 top-1/2 -translate-y-1/2 bg-[var(--stitch-primary)] text-white w-10 h-10 rounded-full flex items-center justify-center active:scale-95 transition-transform hover:shadow-md p-0 min-w-0"
+          aria-label="Parse expense with AI"
         >
           {parseMutation.isPending ? (
             <Loader2 className="h-4 w-4 animate-spin" />

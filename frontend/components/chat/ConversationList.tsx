@@ -15,6 +15,7 @@ interface ConversationListProps {
   onSelect: (id: string) => void;
   onNew: () => void;
   onDelete: (id: string) => void;
+  className?: string;
 }
 
 export function ConversationList({
@@ -24,19 +25,26 @@ export function ConversationList({
   onSelect,
   onNew,
   onDelete,
+  className,
 }: ConversationListProps) {
   return (
-    <div className="flex h-full flex-col rounded-2xl border border-[var(--stitch-outline-variant)]/70 bg-[var(--surface-1)]">
-      <div className="border-b border-[var(--stitch-outline-variant)]/70 p-4">
+    <div
+      className={cn(
+        "flex min-h-0 flex-1 flex-col overflow-hidden rounded-xl border border-[var(--stitch-outline-variant)]/60 bg-[var(--surface-1)]",
+        className,
+      )}
+    >
+      <div className="shrink-0 border-b border-[var(--stitch-outline-variant)]/60 p-2">
         <Button
-          className="w-full bg-[var(--vault-accent)] hover:bg-[var(--vault-accent)]/90 text-white rounded-2xl"
+          size="sm"
+          className="h-9 w-full rounded-xl bg-[var(--vault-accent)] text-white hover:bg-[var(--vault-accent)]/90"
           onClick={onNew}
         >
-          <MessageSquarePlus className="mr-2 h-4 w-4" />
+          <MessageSquarePlus className="mr-1.5 h-4 w-4" />
           New chat
         </Button>
       </div>
-      <ScrollArea className="flex-1 p-2">
+      <ScrollArea className="min-h-0 flex-1 p-1.5">
         {isLoading ? (
           <div className="space-y-2 p-2">
             {[1, 2, 3].map((i) => (
@@ -51,7 +59,7 @@ export function ConversationList({
               <div
                 key={conv.id}
                 className={cn(
-                  "group flex items-start gap-2 rounded-2xl p-3 transition-all duration-200",
+                  "group flex items-start gap-1.5 rounded-xl p-2 transition-colors",
                   activeId === conv.id
                     ? "bg-[var(--vault-accent)]/18 border border-[var(--vault-accent)]/35"
                     : "hover:bg-[var(--surface-2)]"

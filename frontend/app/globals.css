@@ -287,10 +287,56 @@
 }
 
 /* ═══════════════════════════════════════════════════
-   SCROLLBAR HIDE
+   SCROLLBAR
    ═══════════════════════════════════════════════════ */
 .hide-scrollbar::-webkit-scrollbar { display: none; }
 .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* Auth & marketing surfaces */
+.auth-grid {
+  background-image:
+    linear-gradient(color-mix(in srgb, var(--stitch-outline-variant) 22%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in srgb, var(--stitch-outline-variant) 22%, transparent) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+
+.auth-ambient {
+  background:
+    radial-gradient(ellipse 70% 55% at 15% 10%, rgba(79, 70, 229, 0.22), transparent 55%),
+    radial-gradient(ellipse 50% 45% at 85% 90%, rgba(16, 185, 129, 0.08), transparent 50%);
+}
+
+.marketing-panel {
+  border: 1px solid color-mix(in srgb, var(--stitch-outline-variant) 55%, transparent);
+  background: linear-gradient(180deg, var(--surface-1) 0%, var(--surface-0) 100%);
+}
+
+html {
+  overflow-x: hidden;
+}
+
+.vault-theme {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(148, 163, 184, 0.35) transparent;
+}
+
+.vault-theme *::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.vault-theme *::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.vault-theme *::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.35);
+  border-radius: 999px;
+}
+
+.vault-theme *::-webkit-scrollbar-thumb:hover {
+  background: rgba(148, 163, 184, 0.55);
+}
 
 /* ═══════════════════════════════════════════════════
    MICRO ANIMATIONS

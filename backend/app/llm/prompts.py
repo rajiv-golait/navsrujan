@@ -12,22 +12,29 @@ Output JSON schema:
     "description": str or null,
     "transaction_date": str (ISO date YYYY-MM-DD),
     "confidence": float (0-1),
-    "is_academic": boolean (default false)
+    "is_academic": boolean (default false),
+    "transaction_type": str ("debit" for spending, "credit" for money received)
 }
 
 Rules:
-- NEVER invent amounts. If unclear, set confidence below 0.5.
+- NEVER invent amounts. If amount is clearly stated (e.g. "250", "₹250", "spent 250"), use confidence >= 0.75.
+- Only set confidence below 0.5 when amount is genuinely missing or ambiguous.
 - Use today's date from context when no date is mentioned.
 - "textbook", "tuition", "exam fee" -> Education or Academic.
-- Amounts are in Indian Rupees (₹).
+- "pizza", "biryani", "lunch", "swiggy" -> Food, transaction_type debit.
+- "received", "got", "salary", "refund", "credited", "from mom" -> transaction_type credit.
+- Amounts are in Indian Rupees (₹). Amount is always positive; type controls debit vs credit.
 """
 
 PARSE_EXPENSE_EXAMPLES = """
 Examples:
-- "had biryani for lunch 180" -> Food, 180, today
-- "uber to college 95" -> Transport, 95
-- "bought textbook 700" -> Education, 700, is_academic=true
-- "netflix subscription 649" -> Entertainment, 649, Bills if utility-like
+- "had biryani for lunch 180" -> Food, 180, confidence 0.9
+- "Spent 250 on pizza" -> Food, 250, confidence 0.9
+- "uber to college 95" -> Transport, 95, confidence 0.9
+- "bought textbook 700" -> Education, 700, is_academic=true, confidence 0.9
+- "netflix subscription 649" -> Entertainment, 649, confidence 0.85
+- "received 500 from mom" -> Other, 500, transaction_type credit, confidence 0.9
+- "salary credited 15000" -> Other, 15000, transaction_type credit, confidence 0.9
 """
 
 INTENT_CLASSIFY_SYSTEM = """You classify user messages for a student finance assistant.

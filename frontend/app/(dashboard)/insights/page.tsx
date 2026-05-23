@@ -71,12 +71,10 @@ export default function InsightsPage() {
           <SurvivalForecastCard forecast={survivalForecast} />
         )}
 
-        {/* Primary Insights Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Budget Health */}
+        {/* auto-fit: one card spans full width; two cards sit side-by-side */}
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-[repeat(auto-fit,minmax(min(100%,22rem),1fr))]">
           {budgetHealth && <BudgetHealthDonut budgetHealth={budgetHealth} />}
 
-          {/* Savings Opportunities */}
           {savingsOpportunities && savingsOpportunities.length > 0 && (
             <SavingsOpportunities opportunities={savingsOpportunities} />
           )}

@@ -47,6 +47,13 @@ def generate_savings_recommendations(
     if "category" not in df.columns or "amount" not in df.columns or "transaction_date" not in df.columns:
         return []
         
+    # Filter out credit transactions
+    if "transaction_type" in df.columns:
+        df = df[df["transaction_type"] != "credit"]
+        
+    if df.empty:
+        return []
+        
     # Filter to last 30 days for accurate monthly comparison
     from datetime import datetime, timedelta
     df["transaction_date"] = pd.to_datetime(df["transaction_date"])
@@ -75,8 +82,8 @@ def generate_savings_recommendations(
     recommendations = []
     
     for category, user_monthly in monthly_spend.items():
-        if category in ["Academic", "Education", "Health"]:
-            # Skip essential categories
+        if category in ["Academic", "Education", "Health", "Other", "Unknown"]:
+            # Skip essential and vague categories
             continue
         
         peer_avg = peer_averages.get(category, user_monthly * 0.7)
@@ -112,7 +119,7 @@ def calculate_budget_allocation(
     
     50% = Needs (food, transport, bills, rent)
     30% = Wants (entertainment, shopping)
-    20% = Savings/Investments
+    20% = Savings/Investments (unspent income; 0% when overspent)
     """
     if not transactions or monthly_income <= 0:
         return {
@@ -120,11 +127,28 @@ def calculate_budget_allocation(
             "wants_percent": 0,
             "savings_percent": 0,
             "total_spent": 0,
+            "monthly_income": monthly_income,
+            "is_overspent": False,
+            "overspend_amount": 0,
             "recommended_reallocation": None,
+            "status": "needs_data",
         }
     
     df = pd.DataFrame(transactions)
     if "category" not in df.columns or "amount" not in df.columns or "transaction_date" not in df.columns:
+        return {
+            "needs_percent": 0,
+            "wants_percent": 0,
+            "savings_percent": 0,
+            "total_spent": 0,
+            "recommended_reallocation": None,
+        }
+        
+    # Filter out credit transactions
+    if "transaction_type" in df.columns:
+        df = df[df["transaction_type"] != "credit"]
+        
+    if df.empty:
         return {
             "needs_percent": 0,
             "wants_percent": 0,
@@ -148,22 +172,43 @@ def calculate_budget_allocation(
             "recommended_reallocation": None,
         }
     
-    # Categorize into needs vs wants
+    # Categorize into needs vs wants; remaining spend rolls into wants for 50/30/20 view
     needs_categories = ["Food", "Transport", "Bills", "Health", "Education", "Academic"]
-    wants_categories = ["Entertainment", "Shopping"]
+    wants_categories = ["Entertainment", "Shopping", "Other"]
     
-    total_spent = recent_df["amount"].sum()
-    needs_spent = recent_df[recent_df["category"].isin(needs_categories)]["amount"].sum()
-    wants_spent = recent_df[recent_df["category"].isin(wants_categories)]["amount"].sum()
+    total_spent = float(recent_df["amount"].sum())
+    needs_spent = float(recent_df[recent_df["category"].isin(needs_categories)]["amount"].sum())
+    wants_spent = float(recent_df[recent_df["category"].isin(wants_categories)]["amount"].sum())
+    uncategorized = max(0.0, total_spent - needs_spent - wants_spent)
+    wants_spent += uncategorized
+
     savings = monthly_income - total_spent
-    
+    is_overspent = total_spent > monthly_income
+    overspend_amount = max(0.0, total_spent - monthly_income)
+
     needs_percent = (needs_spent / monthly_income) * 100 if monthly_income > 0 else 0
     wants_percent = (wants_spent / monthly_income) * 100 if monthly_income > 0 else 0
-    savings_percent = (savings / monthly_income) * 100 if monthly_income > 0 else 0
+    # Never show absurd negative savings % when user overspent
+    if is_overspent:
+        savings_percent = 0.0
+        savings_amount = 0.0
+    else:
+        savings_percent = (savings / monthly_income) * 100
+        savings_amount = round(savings, 2)
     
     # Recommend reallocation if significantly off from 50/30/20
     reallocation = None
-    if needs_percent > 60:
+    if is_overspent:
+        reallocation = {
+            "cut_from": "spending",
+            "cut_amount": round(overspend_amount, 2),
+            "redirect_to": "savings",
+            "reason": (
+                f"You overspent by ₹{int(overspend_amount):,} vs your monthly budget. "
+                "Pause non-essential spending for a few days."
+            ),
+        }
+    elif needs_percent > 60:
         # Overspending on needs
         cut_amount = monthly_income * 0.10  # Cut 10% from needs
         reallocation = {
@@ -182,28 +227,34 @@ def calculate_budget_allocation(
             "reason": "Wants spending is too high. Reduce discretionary expenses.",
         }
     elif savings_percent < 10:
-        # Not saving enough
-        # Find highest spending category to cut
         category_totals = recent_df.groupby("category")["amount"].sum().to_dict()
         top_category = max(category_totals, key=category_totals.get) if category_totals else "Food"
         cut_amount = monthly_income * 0.10
-        
+
         reallocation = {
             "cut_from": top_category.lower(),
             "cut_amount": round(cut_amount, 2),
             "redirect_to": "savings",
             "reason": f"Increase savings by reducing {top_category} spending.",
         }
-    
+
+    status = "overspent" if is_overspent else (
+        "healthy"
+        if (40 <= needs_percent <= 60 and 20 <= wants_percent <= 40 and savings_percent >= 15)
+        else "needs_adjustment"
+    )
+
     return {
-        "needs_percent": round(needs_percent, 1),
-        "wants_percent": round(wants_percent, 1),
+        "needs_percent": round(min(needs_percent, 100), 1),
+        "wants_percent": round(min(wants_percent, 100), 1),
         "savings_percent": round(savings_percent, 1),
         "needs_amount": round(needs_spent, 2),
         "wants_amount": round(wants_spent, 2),
-        "savings_amount": round(savings, 2),
+        "savings_amount": savings_amount,
         "total_spent": round(total_spent, 2),
         "monthly_income": monthly_income,
+        "is_overspent": is_overspent,
+        "overspend_amount": round(overspend_amount, 2),
         "recommended_reallocation": reallocation,
-        "status": "healthy" if (40 <= needs_percent <= 60 and 20 <= wants_percent <= 40 and savings_percent >= 15) else "needs_adjustment",
+        "status": status,
     }

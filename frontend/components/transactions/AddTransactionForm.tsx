@@ -21,6 +21,7 @@ import { useCreateTransaction } from "@/lib/hooks/useTransactions";
 import {
   TRANSACTION_CATEGORIES,
   type TransactionCategory,
+  type TransactionType,
 } from "@/types/transaction";
 import type { TransactionFormInitialValues } from "./NaturalLanguageInput";
 
@@ -48,6 +49,7 @@ const transactionSchema = z.object({
     .max(500, { message: "Description cannot exceed 500 characters" })
     .optional()
     .or(z.literal("")),
+  transactionType: z.enum(["debit", "credit"]),
   transactionDate: z
     .string()
     .min(1, { message: "Date is required" })
@@ -78,6 +80,7 @@ export function AddTransactionForm({ initialValues, onSuccess }: AddTransactionF
       category: "Food",
       merchant: "",
       description: "",
+      transactionType: "debit",
       transactionDate: today,
     },
     mode: "onTouched",
@@ -99,6 +102,7 @@ export function AddTransactionForm({ initialValues, onSuccess }: AddTransactionF
         category: initialValues.category || "Food",
         merchant: initialValues.merchant || "",
         description: initialValues.description || "",
+        transactionType: initialValues.transactionType || "debit",
         transactionDate: initialValues.transactionDate || today,
       });
     } else {
@@ -107,6 +111,7 @@ export function AddTransactionForm({ initialValues, onSuccess }: AddTransactionF
         category: "Food",
         merchant: "",
         description: "",
+        transactionType: "debit",
         transactionDate: today,
       });
     }
@@ -133,6 +138,7 @@ export function AddTransactionForm({ initialValues, onSuccess }: AddTransactionF
         category: "Food",
         merchant: "",
         description: "",
+        transactionType: "debit",
         transactionDate: today,
       });
       onSuccess?.();
@@ -144,6 +150,39 @@ export function AddTransactionForm({ initialValues, onSuccess }: AddTransactionF
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-5" noValidate>
+      <div className="space-y-2">
+        <Label className="text-sm font-semibold text-foreground">Type *</Label>
+        <Controller
+          control={control}
+          name="transactionType"
+          render={({ field }) => (
+            <div className="grid grid-cols-2 gap-2 rounded-xl bg-[var(--surface-1)] p-1 border border-[var(--stitch-outline)]">
+              {(
+                [
+                  { value: "debit" as TransactionType, label: "Expense (−)" },
+                  { value: "credit" as TransactionType, label: "Income (+)" },
+                ] as const
+              ).map(({ value, label }) => (
+                <button
+                  key={value}
+                  type="button"
+                  onClick={() => field.onChange(value)}
+                  className={`rounded-lg py-2.5 text-sm font-medium transition-colors ${
+                    field.value === value
+                      ? value === "credit"
+                        ? "bg-emerald-600 text-white"
+                        : "bg-[var(--stitch-primary)] text-white"
+                      : "text-[var(--stitch-on-surface-variant)]"
+                  }`}
+                >
+                  {label}
+                </button>
+              ))}
+            </div>
+          )}
+        />
+      </div>
+
       <div className="grid gap-4 sm:grid-cols-2">
         {/* Amount Field */}
         <div className="space-y-2">

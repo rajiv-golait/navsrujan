@@ -12,10 +12,20 @@ class AcademicExpenseService:
         self.table = "academic_expenses"
 
     def create(self, data: dict[str, Any]) -> dict[str, Any]:
-        data["user_id"] = self.user_id
-        response = self.client.table(self.table).insert(data).execute()
+        payload = {**data, "user_id": self.user_id}
+        if not payload.get("due_date"):
+            payload.pop("due_date", None)
+        response = self.client.table(self.table).insert(payload).execute()
+        if getattr(response, "error", None):
+            raise HTTPException(
+                status_code=500,
+                detail=response.error.message or "Failed to create academic expense",
+            )
         if not response.data:
-            raise HTTPException(status_code=500, detail="Failed to create academic expense")
+            raise HTTPException(
+                status_code=500,
+                detail="Failed to create academic expense. Ensure academic_expenses table exists (run add_academic_expenses.sql).",
+            )
         return response.data[0]
 
     def get_by_semester(self, semester_num: int) -> list[dict[str, Any]]:
@@ -25,7 +35,17 @@ class AcademicExpenseService:
     def get_upcoming(self) -> list[dict[str, Any]]:
         today = date.today()
         thirty_days = today + timedelta(days=30)
-        response = self.client.table(self.table).select("*").eq("user_id", self.user_id).neq("payment_status", "paid").gte("due_date", today.isoformat()).lte("due_date", thirty_days.isoformat()).order("due_date").execute()
+        response = (
+            self.client.table(self.table)
+            .select("*")
+            .eq("user_id", self.user_id)
+            .neq("payment_status", "paid")
+            .not_.is_("due_date", "null")
+            .gte("due_date", today.isoformat())
+            .lte("due_date", thirty_days.isoformat())
+            .order("due_date")
+            .execute()
+        )
         return response.data or []
 
     def get_missing_suggestions(self) -> list[dict[str, Any]]:

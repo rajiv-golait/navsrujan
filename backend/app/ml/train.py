@@ -7,11 +7,14 @@ from pathlib import Path
 import joblib
 import numpy as np
 import pandas as pd
+import sklearn
 from sklearn.cluster import KMeans
 from sklearn.ensemble import IsolationForest
 from sklearn.preprocessing import StandardScaler
 
 from app.ml.features import engineer_features
+
+DATASET_DIR = Path(__file__).resolve().parent.parent.parent.parent / "dataset"
 
 CLUSTER_LABELS = [
     "disciplined_saver",
@@ -146,6 +149,7 @@ def train_from_dataset(dataset_dir: Path) -> dict:
 
     return {
         "version": "1.0",
+        "sklearn_version": sklearn.__version__,
         "anomaly_model": anomaly_model,
         "anomaly_scaler": anomaly_scaler,
         "anomaly_features": ANOMALY_FEATURES,
@@ -163,3 +167,13 @@ def save_models(bundle: dict, output_path: Path) -> Path:
     output_path.parent.mkdir(parents=True, exist_ok=True)
     joblib.dump(bundle, output_path)
     return output_path
+
+
+if __name__ == "__main__":
+    import sklearn
+
+    out = Path(__file__).resolve().parent.parent.parent / "model" / "student_financial_intelligence_models.pkl"
+    bundle = train_from_dataset(DATASET_DIR)
+    bundle["sklearn_version"] = sklearn.__version__
+    save_models(bundle, out)
+    print(f"Saved {out} ({bundle['training_rows']} rows, sklearn {sklearn.__version__})")

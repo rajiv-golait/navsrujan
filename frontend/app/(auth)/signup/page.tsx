@@ -7,6 +7,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { ChevronRight, ChevronLeft } from "lucide-react";
 
+import { AuthShell } from "@/components/auth/AuthShell";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -117,27 +118,23 @@ export default function SignupPage() {
   const prevStep = () => setStep(step - 1);
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-[var(--background)] px-4 py-8">
-      {/* Background decoration */}
-      <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -left-40 w-80 h-80 bg-[var(--stitch-primary)]/5 rounded-full blur-3xl" />
-        <div className="absolute -bottom-40 -right-40 w-80 h-80 bg-[var(--stitch-secondary-container)]/10 rounded-full blur-3xl" />
-      </div>
-
-      <div className="relative w-full max-w-2xl stitch-card p-8">
-        <div className="text-center mb-8">
-          <h1 className="text-headline-lg text-[var(--stitch-primary)] mb-1">Smart Budget</h1>
-          <h2 className="text-headline-mobile text-[var(--stitch-on-surface)]">Create your account</h2>
-          <p className="text-sm text-[var(--stitch-on-surface-variant)] mt-1">
-            Start tracking your student finances with AI
-          </p>
-        </div>
-
-        {/* Progress Indicator */}
+    <AuthShell
+      wide
+      title="Create your account"
+      subtitle="Three quick steps — then you’re in Vault"
+      footer={
+        <p className="text-[var(--stitch-on-surface-variant)]">
+          Already have an account?{" "}
+          <Link href="/login" className="font-semibold text-[var(--vault-accent)] hover:underline">
+            Log in
+          </Link>
+        </p>
+      }
+    >
         <div className="flex items-center justify-center gap-2 mb-8">
-          <div className={`h-2 w-16 rounded-full transition-colors ${step >= 1 ? 'bg-[var(--stitch-primary)]' : 'bg-[var(--stitch-outline-variant)]'}`} />
-          <div className={`h-2 w-16 rounded-full transition-colors ${step >= 2 ? 'bg-[var(--stitch-primary)]' : 'bg-[var(--stitch-outline-variant)]'}`} />
-          <div className={`h-2 w-16 rounded-full transition-colors ${step >= 3 ? 'bg-[var(--stitch-primary)]' : 'bg-[var(--stitch-outline-variant)]'}`} />
+          <div className={`h-2 w-16 rounded-full transition-colors ${step >= 1 ? "bg-[var(--vault-accent)]" : "bg-[var(--stitch-outline-variant)]"}`} />
+          <div className={`h-2 w-16 rounded-full transition-colors ${step >= 2 ? "bg-[var(--vault-accent)]" : "bg-[var(--stitch-outline-variant)]"}`} />
+          <div className={`h-2 w-16 rounded-full transition-colors ${step >= 3 ? "bg-[var(--vault-accent)]" : "bg-[var(--stitch-outline-variant)]"}`} />
         </div>
 
         <form onSubmit={handleSignup} className="space-y-5">
@@ -194,7 +191,7 @@ export default function SignupPage() {
               <Button
                 type="button"
                 onClick={nextStep}
-                className="w-full bg-[var(--stitch-primary)] hover:bg-[var(--stitch-primary)]/90 text-white font-semibold h-12 rounded-xl"
+                className="w-full bg-[var(--vault-accent)] hover:bg-[var(--vault-accent)]/90 text-white font-semibold h-12 rounded-xl"
               >
                 Next: Education Details
                 <ChevronRight className="ml-2 h-5 w-5" />
@@ -318,7 +315,7 @@ export default function SignupPage() {
                 <Button
                   type="button"
                   onClick={nextStep}
-                  className="flex-1 bg-[var(--stitch-primary)] hover:bg-[var(--stitch-primary)]/90 text-white h-12 rounded-xl"
+                  className="flex-1 bg-[var(--vault-accent)] hover:bg-[var(--vault-accent)]/90 text-white h-12 rounded-xl"
                 >
                   Next: Personal Details
                   <ChevronRight className="ml-2 h-5 w-5" />
@@ -390,7 +387,7 @@ export default function SignupPage() {
                 </p>
               </div>
 
-              <div className="p-4 rounded-lg bg-[var(--stitch-primary)]/10 border border-[var(--stitch-primary)]/20">
+              <div className="p-4 rounded-lg bg-[var(--vault-accent)]/10 border border-[var(--vault-accent)]/20">
                 <p className="text-xs text-[var(--stitch-on-surface-variant)]">
                   💡 All this information helps our AI provide accurate predictions, peer comparisons, and personalized financial tips tailored to your student life.
                 </p>
@@ -409,7 +406,7 @@ export default function SignupPage() {
                 <Button
                   type="submit"
                   disabled={loading}
-                  className="flex-1 bg-[var(--stitch-primary)] hover:bg-[var(--stitch-primary)]/90 text-white font-semibold h-12 rounded-xl shadow-md"
+                  className="flex-1 bg-[var(--vault-accent)] hover:bg-[var(--vault-accent)]/90 text-white font-semibold h-12 rounded-xl shadow-md"
                 >
                   {loading ? "Creating account..." : "Create Account"}
                 </Button>
@@ -417,14 +414,6 @@ export default function SignupPage() {
             </div>
           )}
         </form>
-
-        <p className="mt-8 text-center text-sm text-[var(--stitch-on-surface-variant)]">
-          Already have an account?{" "}
-          <Link href="/login" className="font-semibold text-[var(--stitch-primary)] hover:underline">
-            Log in
-          </Link>
-        </p>
-      </div>
-    </div>
+    </AuthShell>
   );
 }

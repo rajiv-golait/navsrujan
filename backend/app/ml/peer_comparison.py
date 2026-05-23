@@ -116,7 +116,39 @@ def compare_with_peers(
     
     # Calculate user's monthly spending
     df = pd.DataFrame(user_transactions)
-    if "category" not in df.columns or "amount" not in df.columns:
+    if "category" not in df.columns or "amount" not in df.columns or "transaction_date" not in df.columns:
+        return {
+            "your_monthly_spend": 0,
+            "peer_average_spend": 0,
+            "difference": 0,
+            "percentile": 50,
+            "categories_above_peer": [],
+            "categories_below_peer": [],
+            "by_category": {},
+        }
+        
+    # Filter out credit transactions
+    if "transaction_type" in df.columns:
+        df = df[df["transaction_type"] != "credit"]
+        
+    if df.empty:
+        return {
+            "your_monthly_spend": 0,
+            "peer_average_spend": 0,
+            "difference": 0,
+            "percentile": 50,
+            "categories_above_peer": [],
+            "categories_below_peer": [],
+            "by_category": {},
+        }
+        
+    # Filter to last 30 days
+    from datetime import datetime, timedelta
+    df["transaction_date"] = pd.to_datetime(df["transaction_date"])
+    cutoff_date = pd.Timestamp(datetime.now() - timedelta(days=30))
+    recent_df = df[df["transaction_date"] >= cutoff_date]
+    
+    if recent_df.empty:
         return {
             "your_monthly_spend": 0,
             "peer_average_spend": 0,
@@ -127,8 +159,8 @@ def compare_with_peers(
             "by_category": {},
         }
     
-    user_by_category = df.groupby("category")["amount"].sum().to_dict()
-    user_total = df["amount"].sum()
+    user_by_category = recent_df.groupby("category")["amount"].sum().to_dict()
+    user_total = recent_df["amount"].sum()
     
     # Calculate peer total
     peer_total = sum(peer_averages.values())

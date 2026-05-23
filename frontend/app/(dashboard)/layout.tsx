@@ -9,12 +9,18 @@ import {
   LineChart,
   LogOut,
   MessageSquare,
+  Plus,
   Sparkles,
   Receipt,
   Settings,
   Wallet,
 } from "lucide-react";
 
+import { MobileNavMenu } from "@/components/layout/MobileNavMenu";
+import {
+  AddTransactionDialogProvider,
+  useAddTransactionDialog,
+} from "@/components/transactions/AddTransactionDialog";
 import { BalanceStrip } from "@/components/vault/BalanceStrip";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/lib/hooks/useAuth";
@@ -37,6 +43,26 @@ const mobileNavItems = [
   { href: "/dashboard", label: "Overview", icon: LayoutDashboard },
   { href: "/profile", label: "Profile", icon: Settings },
 ];
+
+function SidebarAddExpenseButton() {
+  const pathname = usePathname();
+  const { open } = useAddTransactionDialog();
+  const onTransactions =
+    pathname === "/transactions" || pathname.startsWith("/transactions/");
+
+  if (!onTransactions) return null;
+
+  return (
+    <Button
+      type="button"
+      onClick={open}
+      className="mb-3 w-full gap-2 rounded-2xl bg-[var(--vault-accent)] text-white hover:bg-[var(--vault-accent)]/90"
+    >
+      <Plus className="h-4 w-4" />
+      Add expense (AI)
+    </Button>
+  );
+}
 
 export default function DashboardLayout({
   children,
@@ -73,7 +99,8 @@ export default function DashboardLayout({
   };
 
   return (
-    <div className="vault-theme dark flex min-h-screen bg-[var(--background)] text-[var(--stitch-on-surface)]">
+    <AddTransactionDialogProvider>
+    <div className="vault-theme dark flex min-h-screen overflow-x-hidden bg-[var(--background)] text-[var(--stitch-on-surface)]">
       <aside className="hidden md:flex h-screen w-48 lg:w-56 fixed left-0 top-0 flex-col border-r border-[var(--stitch-outline-variant)]/70 bg-[var(--surface-0)] z-40">
         <div className="px-5 py-6 border-b border-[var(--stitch-outline-variant)]/60">
           <h1 className="text-xl font-bold tracking-tight text-[var(--stitch-on-surface)] flex items-center gap-2">
@@ -114,6 +141,7 @@ export default function DashboardLayout({
         </nav>
 
         <div className="border-t border-[var(--stitch-outline-variant)]/60 p-4">
+          <SidebarAddExpenseButton />
           <div className="flex items-center gap-3 mb-3 rounded-2xl border border-[var(--stitch-outline-variant)]/60 bg-[var(--surface-1)] p-2.5">
             <div className="w-9 h-9 rounded-full bg-gradient-to-br from-[var(--vault-accent)]/70 to-[var(--stitch-secondary)]/70 flex items-center justify-center">
               <span className="text-sm font-semibold text-white">
@@ -136,26 +164,34 @@ export default function DashboardLayout({
         </div>
       </aside>
 
-      <div className="flex flex-1 flex-col md:pl-48 lg:pl-56">
-        <header className="z-30 border-b border-[var(--stitch-outline-variant)] bg-[var(--stitch-surface-container-lowest)]/95 backdrop-blur-xl px-3 py-3 md:px-8 md:py-4">
+      <div className="flex min-h-0 flex-1 flex-col md:pl-48 lg:pl-56 overflow-x-hidden">
+        <header
+          className={cn(
+            "z-30 shrink-0 border-b border-[var(--stitch-outline-variant)] bg-[var(--stitch-surface-container-lowest)]/95 backdrop-blur-xl px-3 md:px-6",
+            isChatHome ? "py-1.5 md:py-2" : "py-2 md:py-2.5",
+          )}
+        >
           {!isChatHome && (
-            <div className="hidden md:block max-w-3xl">
+            <div className="hidden md:block">
               <BalanceStrip compact />
             </div>
           )}
-          <div className="flex items-center justify-between md:hidden">
-            <span className="font-semibold text-[var(--stitch-on-surface)]">Vault</span>
-            <button
-              type="button"
-              onClick={handleSignOut}
-              className="text-xs text-[var(--stitch-on-surface-variant)]"
-            >
-              Sign out
-            </button>
+          <div className={cn("flex items-center justify-between gap-2", !isChatHome && "md:hidden")}>
+            <div className="flex items-center gap-2 md:hidden">
+              <MobileNavMenu onSignOut={handleSignOut} />
+              <span className="font-semibold text-[var(--stitch-on-surface)]">Vault</span>
+            </div>
           </div>
         </header>
 
-        <main className="flex-1 px-3 py-4 pb-24 md:px-8 md:py-8 md:pb-8 max-w-[1400px] w-full mx-auto">
+        <main
+          className={cn(
+            "flex-1 min-h-0 w-full overflow-x-hidden",
+            isChatHome
+              ? "flex flex-col overflow-hidden px-2 py-2 pb-2 md:px-3 md:py-2 md:pb-3"
+              : "overflow-y-auto px-3 py-4 pb-24 md:px-6 md:py-8 md:pb-8 lg:px-8",
+          )}
+        >
           {children}
         </main>
       </div>
@@ -183,5 +219,6 @@ export default function DashboardLayout({
         </div>
       </nav>
     </div>
+    </AddTransactionDialogProvider>
   );
 }

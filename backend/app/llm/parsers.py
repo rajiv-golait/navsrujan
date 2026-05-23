@@ -8,7 +8,7 @@ from typing import Any, Optional
 
 from pydantic import BaseModel, Field, field_validator
 
-from app.schemas.transaction import TransactionCategory, TransactionCreate
+from app.schemas.transaction import TransactionCategory, TransactionCreate, TransactionType
 
 
 class ParsedExpense(BaseModel):
@@ -19,6 +19,7 @@ class ParsedExpense(BaseModel):
     transaction_date: date
     confidence: float = Field(..., ge=0, le=1)
     is_academic: bool = False
+    transaction_type: TransactionType = TransactionType.DEBIT
 
     @field_validator("confidence")
     @classmethod
@@ -34,22 +35,23 @@ class ParseValidationError(Exception):
 
 
 def validate_parsed_expense(raw: dict[str, Any]) -> TransactionCreate:
-    """Validate LLM output and return a TransactionCreate-ready object."""
-    confidence = float(raw.get("confidence", 0))
-    if confidence < 0.5:
-        raise ParseValidationError(
-            "Could not confidently parse the amount or category. "
-            "Please specify the amount clearly.",
-            confidence=confidence,
-        )
+    """Validate LLM or heuristic output and return a TransactionCreate-ready object."""
+    confidence = float(raw.get("confidence", 0) or 0)
 
     try:
         parsed = ParsedExpense.model_validate(raw)
     except Exception as exc:
         raise ParseValidationError(
-            f"Invalid parsed expense: {exc}",
+            f"Could not parse expense fields: {exc}",
             confidence=confidence,
         ) from exc
+
+    if confidence < 0.35:
+        raise ParseValidationError(
+            "Could not confidently parse the amount or category. "
+            "Please specify the amount clearly (e.g. 'pizza 250').",
+            confidence=confidence,
+        )
 
     return TransactionCreate(
         amount=parsed.amount,
@@ -59,5 +61,6 @@ def validate_parsed_expense(raw: dict[str, Any]) -> TransactionCreate:
         transaction_date=parsed.transaction_date,
         entry_method="nlp",
         is_academic=parsed.is_academic,
+        transaction_type=parsed.transaction_type,
         confidence_score=Decimal(str(round(parsed.confidence, 2))),
     )

@@ -139,23 +139,32 @@ def _build_forecast(
         weekend_average = daily_prediction
     else:
         totals_by_day: dict[int, float] = {}
-        weekday_amounts: list[float] = []
-        weekend_amounts: list[float] = []
         for row in rows:
             totals_by_day[row["day"]] = totals_by_day.get(row["day"], 0.0) + row["amount"]
-            if row["is_weekend"]:
-                weekend_amounts.append(row["amount"])
-            else:
-                weekday_amounts.append(row["amount"])
 
-        daily_actuals = [
-            totals_by_day.get(day_number, 0.0)
-            for day_number in range(1, days_elapsed + 1)
-        ]
+        daily_actuals = []
+        weekday_daily_totals = []
+        weekend_daily_totals = []
+        
+        for day_number in range(1, days_elapsed + 1):
+            day_total = totals_by_day.get(day_number, 0.0)
+            daily_actuals.append(day_total)
+            
+            # Determine if this day was a weekend
+            # We need to construct a date object to check weekday
+            try:
+                day_date = date(today.year, today.month, day_number)
+                if day_date.weekday() in [5, 6]:
+                    weekend_daily_totals.append(day_total)
+                else:
+                    weekday_daily_totals.append(day_total)
+            except ValueError:
+                pass
+
         month_average = _mean(daily_actuals)
         recent_average = _mean(daily_actuals[-min(7, len(daily_actuals)):], month_average)
-        weekday_average = _mean(weekday_amounts, month_average)
-        weekend_average = _mean(weekend_amounts, month_average)
+        weekday_average = _mean(weekday_daily_totals, month_average)
+        weekend_average = _mean(weekend_daily_totals, month_average)
         variability = _std(daily_actuals)
         daily_prediction = round((recent_average * 0.6) + (month_average * 0.4), 2)
         confidence = "high" if len(rows) >= 20 and variability < max(month_average, 1) else "medium"

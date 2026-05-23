@@ -7,13 +7,11 @@ import { toast } from "sonner";
 import { ChatBubble } from "@/components/chat/ChatBubble";
 import { ConversationList } from "@/components/chat/ConversationList";
 import { useBalance, useSetupBalance } from "@/lib/hooks/useBalance";
-import { MemoryFactsDrawer } from "@/components/vault/MemoryFactsDrawer";
 import {
   PurchaseCheckCard,
   type PurchaseCheckData,
 } from "@/components/vault/PurchaseCheckCard";
-import { RecurringPanel } from "@/components/vault/RecurringPanel";
-import { ScheduledExpensesPanel } from "@/components/vault/ScheduledExpensesPanel";
+import { formatCurrency } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { getApiErrorMessage } from "@/lib/api-errors";
@@ -163,7 +161,7 @@ export function VaultAdvisor() {
   };
 
   return (
-    <>
+    <div className="flex min-h-0 flex-1 flex-col">
       {!balance?.configured && showBalanceSetup && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
           <div className="vault-card p-6 max-w-md w-full mx-4 space-y-4">
@@ -203,59 +201,46 @@ export function VaultAdvisor() {
         </div>
       )}
 
-      <div className="flex flex-col lg:flex-row gap-4 md:gap-6 h-[calc(100dvh-9.5rem)] md:h-auto md:min-h-[calc(100vh-12rem)]">
-        <aside className="lg:w-80 shrink-0 space-y-4 hidden lg:block">
+      <div className="flex min-h-0 flex-1 flex-col gap-2 lg:flex-row lg:gap-3">
+        <aside className="hidden min-h-0 w-56 shrink-0 flex-col gap-2 lg:flex xl:w-60">
           {balance?.configured ? (
-            <>
-              <div className="vault-card p-5 space-y-4">
-                <div className="flex items-center justify-between">
-                  <p className="text-label-caps text-[var(--stitch-on-surface-variant)] text-[10px]">Your Balance</p>
-                  <Wallet className="h-4 w-4 text-[var(--stitch-on-surface-variant)]" />
+            <div className="shrink-0 rounded-xl border border-[var(--stitch-outline-variant)]/60 bg-[var(--surface-1)] p-3">
+              <div className="mb-2 flex items-center justify-between">
+                <p className="text-[10px] font-semibold uppercase tracking-wide text-[var(--stitch-on-surface-variant)]">
+                  Balance
+                </p>
+                <Wallet className="h-3.5 w-3.5 text-[var(--stitch-on-surface-variant)]" />
+              </div>
+              <p className="text-data-mono text-xl font-bold text-[var(--stitch-on-surface)]">
+                {formatCurrency(balance.current_balance ?? 0)}
+              </p>
+              <div className="mt-2 grid grid-cols-2 gap-2 border-t border-[var(--stitch-outline-variant)]/50 pt-2">
+                <div>
+                  <p className="text-[9px] uppercase text-[var(--stitch-on-surface-variant)]">30d</p>
+                  <p className="text-data-mono text-xs font-semibold text-[var(--stitch-secondary)]">
+                    {formatCurrency(balance.projected_balance_30d ?? 0)}
+                  </p>
                 </div>
-                <div className="space-y-3">
-                  <div>
-                    <p className="text-xs text-[var(--stitch-on-surface-variant)] mb-1">Current</p>
-                    <p className="text-data-mono text-2xl font-bold text-[var(--stitch-on-surface)]">
-                      ₹{balance.current_balance?.toLocaleString()}
-                    </p>
-                  </div>
-                  <div className="grid grid-cols-2 gap-3 pt-3 border-t border-[var(--stitch-outline-variant)]">
-                    <div>
-                      <p className="text-[10px] text-label-caps text-[var(--stitch-on-surface-variant)] mb-1">30d Projected</p>
-                      <p className="text-data-mono text-sm font-semibold text-[var(--stitch-secondary)]">
-                        ₹{balance.projected_balance_30d?.toLocaleString()}
-                      </p>
-                    </div>
-                    <div>
-                      <p className="text-[10px] text-label-caps text-[var(--stitch-on-surface-variant)] mb-1">Runway</p>
-                      <p className="text-data-mono text-sm font-semibold text-[var(--stitch-on-surface)]">
-                        {balance.runway_days ?? 0} days
-                      </p>
-                    </div>
-                  </div>
+                <div>
+                  <p className="text-[9px] uppercase text-[var(--stitch-on-surface-variant)]">Runway</p>
+                  <p className="text-data-mono text-xs font-semibold">
+                    {balance.runway_days ?? 0}d
+                  </p>
                 </div>
               </div>
-              <ScheduledExpensesPanel />
-              <RecurringPanel />
-              <MemoryFactsDrawer />
-            </>
+            </div>
           ) : (
             <button
+              type="button"
               onClick={() => setShowBalanceSetup(true)}
-              className="vault-card p-5 w-full text-left hover:border-[var(--vault-accent,#4f46e5)] hover:shadow-lg hover:shadow-[var(--vault-accent,#4f46e5)]/10 transition-all group"
+              className="shrink-0 rounded-xl border border-dashed border-[var(--stitch-outline-variant)] bg-[var(--surface-1)] p-3 text-left hover:border-[var(--vault-accent)]"
             >
-              <div className="flex items-center gap-3 mb-2">
-                <div className="w-10 h-10 rounded-full bg-[var(--vault-accent,#4f46e5)]/15 flex items-center justify-center group-hover:bg-[var(--vault-accent,#4f46e5)]/25 transition-colors">
-                  <Wallet className="h-5 w-5 text-[var(--vault-accent,#4f46e5)]" />
-                </div>
-                <div className="flex-1">
-                  <p className="text-sm font-semibold text-[var(--stitch-on-surface)]">Set your balance</p>
-                  <p className="text-xs text-[var(--stitch-on-surface-variant)]">Enable smart advice</p>
-                </div>
-              </div>
+              <p className="text-sm font-semibold text-[var(--stitch-on-surface)]">Set balance</p>
+              <p className="text-xs text-[var(--stitch-on-surface-variant)]">For runway advice</p>
             </button>
           )}
           <ConversationList
+            className="min-h-0 flex-1"
             conversations={conversations}
             activeId={activeConversationId}
             isLoading={convLoading}
@@ -265,69 +250,84 @@ export function VaultAdvisor() {
           />
         </aside>
 
-        <div className="flex min-w-0 flex-1 flex-col min-h-0 vault-card-elevated overflow-hidden">
+        <div className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden rounded-xl border border-[var(--stitch-outline-variant)]/60 bg-[var(--surface-0)]">
+          <div className="flex shrink-0 items-center justify-between gap-2 border-b border-[var(--stitch-outline-variant)]/60 px-3 py-2">
+            <div className="min-w-0">
+              <p className="text-[10px] font-semibold uppercase tracking-wide text-[var(--vault-accent)]">
+                Vault Advisor
+              </p>
+              <p className="truncate text-xs text-[var(--stitch-on-surface-variant)]">
+                Balance-aware finance coach
+              </p>
+            </div>
+            {balance?.configured && (
+              <div className="hidden text-right sm:block">
+                <p className="text-data-mono text-sm font-bold">
+                  {formatCurrency(balance.current_balance ?? 0)}
+                </p>
+                <p className="text-[10px] text-[var(--stitch-on-surface-variant)]">
+                  {balance.runway_days ?? 0}d runway
+                </p>
+              </div>
+            )}
+          </div>
+
           {balance?.configured && (
-            <div className="md:hidden p-3 border-b border-[var(--stitch-outline-variant)] bg-[var(--stitch-surface-container-high)]">
-              <div className="grid grid-cols-3 gap-3 text-center">
-                <div>
-                  <p className="text-[10px] text-label-caps text-[var(--stitch-on-surface-variant)] mb-1">Balance</p>
-                  <p className="text-base font-bold text-[var(--stitch-on-surface)]">
-                    ₹{((balance.current_balance ?? 0) / 1000).toFixed(0)}k
-                  </p>
-                </div>
-                <div>
-                  <p className="text-[10px] text-label-caps text-[var(--stitch-on-surface-variant)] mb-1">30d</p>
-                  <p className="text-base font-bold text-[var(--stitch-secondary)]">
-                    ₹{((balance.projected_balance_30d ?? 0) / 1000).toFixed(0)}k
-                  </p>
-                </div>
-                <div>
-                  <p className="text-[10px] text-label-caps text-[var(--stitch-on-surface-variant)] mb-1">Runway</p>
-                  <p className="text-base font-bold text-[var(--stitch-on-surface)]">
-                    {balance.runway_days ?? 0}d
-                  </p>
-                </div>
+            <div className="grid shrink-0 grid-cols-3 gap-2 border-b border-[var(--stitch-outline-variant)]/40 px-2 py-1.5 text-center lg:hidden">
+              <div>
+                <p className="text-[9px] uppercase text-[var(--stitch-on-surface-variant)]">Bal</p>
+                <p className="text-xs font-bold">{formatCurrency(balance.current_balance ?? 0)}</p>
+              </div>
+              <div>
+                <p className="text-[9px] uppercase text-[var(--stitch-on-surface-variant)]">30d</p>
+                <p className="text-xs font-bold text-[var(--stitch-secondary)]">
+                  {formatCurrency(balance.projected_balance_30d ?? 0)}
+                </p>
+              </div>
+              <div>
+                <p className="text-[9px] uppercase text-[var(--stitch-on-surface-variant)]">Run</p>
+                <p className="text-xs font-bold">{balance.runway_days ?? 0}d</p>
               </div>
             </div>
           )}
 
-          <ScrollArea className="flex-1 min-h-0 p-4 md:p-7">
+          <ScrollArea className="min-h-0 flex-1 px-3 py-3">
             {!activeConversationId && displayMessages.length === 0 ? (
-              <div className="mx-auto max-w-2xl pt-8 md:pt-12 space-y-8">
-                <div className="text-center">
-                  <div className="w-16 h-16 md:w-20 md:h-20 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-[var(--vault-accent,#4f46e5)] to-[var(--stitch-secondary)] p-0.5">
-                    <div className="w-full h-full rounded-2xl bg-[var(--stitch-surface-container)] flex items-center justify-center">
-                      <Sparkles className="h-8 w-8 md:h-10 md:w-10 text-[var(--vault-accent,#4f46e5)]" />
-                    </div>
+              <div className="mx-auto max-w-xl space-y-4 py-2">
+                <div className="flex items-center gap-3">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[var(--vault-accent)]/15">
+                    <Sparkles className="h-5 w-5 text-[var(--vault-accent)]" />
                   </div>
-                  <h2 className="text-2xl md:text-3xl font-bold text-[var(--stitch-on-surface)] mb-2">Vault Advisor</h2>
-                  <p className="text-sm md:text-base text-[var(--stitch-on-surface-variant)]">
-                    Balance-aware guidance — numbers from your data, not guesses.
-                  </p>
+                  <div>
+                    <h2 className="text-base font-bold text-[var(--stitch-on-surface)]">Ask anything</h2>
+                    <p className="text-xs text-[var(--stitch-on-surface-variant)]">
+                      Answers use your real balance and transactions.
+                    </p>
+                  </div>
                 </div>
                 {lastPurchaseCheck && <PurchaseCheckCard data={lastPurchaseCheck} />}
-                <div className="flex flex-wrap gap-2.5 justify-center">
+                <div className="flex flex-wrap gap-1.5">
                   {VAULT_PROMPTS.map((query) => (
                     <button
                       key={query}
                       type="button"
                       disabled={sendMutation.isPending}
-                      className="text-left px-4 py-2.5 rounded-2xl border border-[var(--stitch-outline-variant)] bg-[var(--surface-1)] text-sm text-[var(--stitch-on-surface-variant)] hover:border-[var(--vault-accent,#4f46e5)] hover:text-[var(--stitch-on-surface)] hover:bg-[var(--surface-2)] active:scale-95 transition-all max-w-[340px]"
+                      className="rounded-lg border border-[var(--stitch-outline-variant)]/60 bg-[var(--surface-1)] px-2.5 py-1.5 text-left text-xs text-[var(--stitch-on-surface-variant)] transition-colors hover:border-[var(--vault-accent)] hover:text-[var(--stitch-on-surface)]"
                       onClick={() => handleSend(query)}
                     >
                       {query}
                     </button>
                   ))}
                 </div>
-                <div className="text-center space-y-2 px-2">
-                  <p className="text-xs text-[var(--stitch-on-surface-variant)]">Try slash commands:</p>
-                  <div className="flex flex-wrap gap-2 justify-center">
-                    {["/balance", "/plan", "/recurring", "/check 1500"].map((cmd) => (
-                      <code key={cmd} className="text-[11px] px-2 py-1 rounded bg-[var(--stitch-surface-container-high)] text-[var(--vault-accent,#4f46e5)] font-mono">
-                        {cmd}
-                      </code>
-                    ))}
-                  </div>
+                <div className="flex flex-wrap gap-1.5">
+                  {["/balance", "/check 1500", "/forecast"].map((cmd) => (
+                    <code
+                      key={cmd}
+                      className="rounded-md bg-[var(--surface-1)] px-1.5 py-0.5 text-[10px] font-mono text-[var(--vault-accent)]"
+                    >
+                      {cmd}
+                    </code>
+                  ))}
                 </div>
               </div>
             ) : msgLoading && displayMessages.length === 0 ? (
@@ -335,39 +335,34 @@ export function VaultAdvisor() {
                 <Loader2 className="h-6 w-6 animate-spin text-[var(--vault-accent,#4f46e5)]" />
               </div>
             ) : (
-              <div className="mx-auto w-full max-w-3xl space-y-4">
+              <div className="mx-auto w-full max-w-2xl space-y-2.5">
                 {lastPurchaseCheck && <PurchaseCheckCard data={lastPurchaseCheck} />}
                 {displayMessages.map((msg) => (
-                  <div
-                    key={msg.id}
-                    className={msg.role === "assistant" ? "ai-accent-line" : undefined}
-                  >
-                    <ChatBubble message={msg} />
-                  </div>
+                  <ChatBubble key={msg.id} message={msg} />
                 ))}
                 <div ref={bottomRef} />
               </div>
             )}
           </ScrollArea>
 
-          <div className="border-t border-[var(--stitch-outline-variant)]/70 p-3 md:p-5 glass-panel safe-bottom">
+          <div className="shrink-0 border-t border-[var(--stitch-outline-variant)]/60 px-2 py-2 safe-bottom">
             <form
               onSubmit={(e) => {
                 e.preventDefault();
                 handleSend(input);
               }}
-              className="mx-auto flex w-full max-w-3xl gap-2 md:gap-3"
+              className="mx-auto flex w-full max-w-2xl gap-2"
             >
               <input
                 type="text"
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 placeholder="Ask Vault… or /check 2000"
-                className="flex-1 rounded-2xl border border-[var(--stitch-outline-variant)] bg-[var(--surface-1)] px-4 py-3.5 text-base md:text-sm text-[var(--stitch-on-surface)] placeholder:text-[var(--stitch-on-surface-variant)]/60 focus:outline-none focus:border-[var(--vault-accent,#4f46e5)] focus:ring-2 focus:ring-[var(--vault-accent,#4f46e5)]/20 transition-all"
+                className="h-10 flex-1 rounded-xl border border-[var(--stitch-outline-variant)]/60 bg-[var(--surface-1)] px-3 text-sm text-[var(--stitch-on-surface)] placeholder:text-[var(--stitch-on-surface-variant)]/60 focus:border-[var(--vault-accent)] focus:outline-none focus:ring-2 focus:ring-[var(--vault-accent)]/20"
               />
               <Button
                 type="submit"
-                className="shrink-0 bg-[var(--vault-accent,#4f46e5)] hover:bg-[var(--vault-accent,#4f46e5)]/90 text-white rounded-2xl h-12 w-12 p-0 shadow-lg shadow-[var(--vault-accent,#4f46e5)]/20"
+                className="h-10 w-10 shrink-0 rounded-xl bg-[var(--vault-accent)] p-0 text-white hover:bg-[var(--vault-accent)]/90"
                 disabled={sendMutation.isPending || !input.trim()}
               >
                 {sendMutation.isPending ? (
@@ -380,6 +375,6 @@ export function VaultAdvisor() {
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 }
